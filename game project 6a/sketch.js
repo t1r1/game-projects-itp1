@@ -117,7 +117,7 @@ function renderCharacterFront() {
     // hands
     fill(200, 150, 150);
     rect(gameChar_x - 23, gameChar_y - 33, 10, 10);
-    rect(gameChar_x + 13, gameChar_y - 33, 10, 10);
+    rect(gameChar_x + 13, gameChar_y - 33, 10, 10),
 }
 
 function renderCharacterJump() {

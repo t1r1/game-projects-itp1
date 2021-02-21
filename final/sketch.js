@@ -1,5 +1,6 @@
 var gameChar_x = 0;
 var gameChar_y = 0;
+var gameChar_world_x = 0;
 var treePos_x = 0;
 var treePos_y = 0;
 var floorPos_x = 0;
@@ -9,7 +10,9 @@ var collectable = {};
 var cloud = {};
 var mountains = {};
 var insideCanyon = false;
-var game_score = null;
+var gameScore = 0;
+var platforms = [];
+var tooFarLeft = false;
 
 var lives = null;
 var gameState = 'startscreen'; // initial state
@@ -33,7 +36,7 @@ const COLORS = {
     treeCrown: [63, 90, 56],
     treeTrunk: [67, 58, 34],
     // sky: [98, 180, 229],
-    sky: [51, 56, 99 ],
+    sky: [51, 56, 99],
     cloud: [78, 191, 239],
     ground: [117, 166, 91],
     blueWater: [4, 117, 185],
@@ -41,27 +44,35 @@ const COLORS = {
     foundationColorOne: [96, 107, 53],
     foundationColorTwo: [68, 93, 58],
     character: {
-        body: [228, 105, 74 ],
+        body: [228, 105, 74],
         hands: [200, 150, 150],
         hair: [219, 218, 158]
     },
     startScreen: [0, 0, 0],
     startScreentext: [0, 0, 0],
+    platform: [200, 145, 92]
 };
 
 const SIZES = {
     canvasWidth: 1024,
     canvasHeight: 576,
+    characterBody: 35,
+    platform: 10,
+    jumpElevation: 150,
+    catPosX: -10,
+    catPosY:  360
 };
 
 
-var trees_x = [-1000, -750, -300, 40, 600, 800, 1300, 2000, 2400, 2700];
-var clouds = [-1000, -800, -100, 200, 620, 850, 1550, 1700, 2400];
+var trees_x = [-300, 40, 600, 800, 1370, 2000, 2400, 2700, 3000, 3400];
+var clouds = [];
+
+const cloudSpeed = [];
 var collectables = [
-    { x_pos: -500, isFound: false, y_pos: 280, size: 50 },
-    { x_pos: 180, isFound: false, y_pos: 280, size: 50 },
-    { x_pos: 460, isFound: false, y_pos: 280, size: 50 },
-    { x_pos: 1400, isFound: false, y_pos: 280, size: 50 },
+    {x_pos: 200, isFound: false, y_pos: 280, size: 50},
+    {x_pos: 460, isFound: false, y_pos: 280, size: 50},
+    {x_pos: 1250, isFound: false, y_pos: 250, size: 50},
+    {x_pos: 1050, isFound: false, y_pos: 290, size: 50},
 ];
 var mountains_x = [300, 1500];
 var mountains_x_snow = [500, 1700];
@@ -72,14 +83,13 @@ var canyons = [
         depth: 120,
         isCharacterInside: false,
     },
-    { x_pos: -200, width: 120, depth: 120, isCharacterInside: false },
+    {x_pos: 1000, width: 120, depth: 120, isCharacterInside: false},
 ];
 
 var NUMBERS = {
     maxLives: 3,
     minLives: 1,
-    maxScore: 1
-
+    maxScore: collectables.length,
 }
 
 let cat;
@@ -87,8 +97,6 @@ let liveIcon;
 let gameOverImg;
 let completeLevelImg;
 let gameSound;
-
-
 
 
 function preload() {
@@ -100,24 +108,74 @@ function preload() {
 
     //loading sounds
     soundFormats('mp3', 'wav');
-    gameSound = loadSound("assets/24_release.mp3");
+    gameSound = loadSound("assets/dream98.mp3");
     gameSound.setVolume(0.3);
 
 }
 
 function playMusic() {
-    console.log('inside play')
     gameSound.loop();
+}
+
+function setupClouds() {
+    const numClouds = 5;
+    for (let i = 0; i < numClouds; i++) {
+        const xCord = random(10, 1000);
+        const speed = random(0.1, 1);
+        clouds.push(xCord)
+        cloudSpeed.push(speed);
+    }
 }
 
 
 function setup() {
     createCanvas(SIZES.canvasWidth, SIZES.canvasHeight);
-
     floorPos_y = 432;
-
     lives = NUMBERS.maxLives;
+    setupClouds();
+}
 
+
+function createPlatforms(x, y, length, isMoving) {
+    return {
+        x,
+        y,
+        length,
+        isMoving,
+        speed: 1,
+        state: 'right',
+        maxX: x + length,
+        minX: x,
+        draw: function () {
+            fill(COLORS.platform);
+            rect(this.x, this.y, this.length, SIZES.platform);
+        },
+        checkContact: function (gc_x, gc_y) {
+            if (gc_x > this.x && gc_x < this.x + this.length) {
+                const distance = this.y - gc_y;
+                return distance > 0 && distance < 5; // is above the platform, but not very much (5)
+            }
+        },
+
+        move: function () {
+            if (!this.isMoving) {
+                return;
+            }
+
+            if (this.state === 'right') {
+                this.x += this.speed
+                if (this.x >= this.maxX) {
+                    this.state = 'left'
+                }
+            } else {
+                this.x -= this.speed;
+                if (this.x <= this.minX) {
+                    this.state = 'right'
+                }
+            }
+        }
+
+    }
 }
 
 function renderCharacterFront() {
@@ -126,7 +184,7 @@ function renderCharacterFront() {
     stroke(0);
 
     fill(200, 150, 150);
-    ellipse(gameChar_x, gameChar_y - 50, 35);
+    ellipse(gameChar_x, gameChar_y - 50, SIZES.characterBody);
     ellipse(gameChar_x, gameChar_y - 65, 3);
     ellipse(gameChar_x + 3, gameChar_y - 65, 3);
     ellipse(gameChar_x - 3, gameChar_y - 65, 3);
@@ -139,7 +197,7 @@ function renderCharacterFront() {
     // body
     fill(255, 203, 0);
     stroke(0);
-    rect(gameChar_x - 13, gameChar_y - 35, 26, 30);
+    rect(gameChar_x - 13, gameChar_y - SIZES.characterBody, 26, 30);
 
     //feet
     fill(0);
@@ -151,7 +209,6 @@ function renderCharacterFront() {
     rect(gameChar_x - 23, gameChar_y - 33, 10, 10);
     rect(gameChar_x + 13, gameChar_y - 33, 10, 10);
 }
-
 
 function renderCharacterJump() {
     strokeWeight(4);
@@ -349,7 +406,7 @@ function renderCloud(xPos) {
 
 function drawCanyon(t_canyon) {
     fill(COLORS.sky);
-    rect(t_canyon.x_pos, 432, t_canyon.width, t_canyon.width + 30);
+    rect(t_canyon.x_pos, floorPos_y, t_canyon.width, t_canyon.width + 30);
     fill(COLORS.blueWater);
     rect(t_canyon.x_pos, 530, 120, 130);
 }
@@ -422,6 +479,7 @@ function drawMountains() {
 
 function drawClouds(clouds) {
     for (let i = 0; i < clouds.length; i++) {
+        clouds[i] += cloudSpeed[i];
         renderCloud(clouds[i]);
     }
 }
@@ -435,7 +493,7 @@ function keyPressed() {
             if (keyCode === keyCodes.KEY_CODE_RIGHT) {
                 isRight = true;
             }
-            if (keyCode === keyCodes.KEY_CODE_SPACE) {
+            if (keyCode === keyCodes.KEY_CODE_SPACE && !isFalling && !isPlummeting) {
                 isJumping = true;
             }
             break;
@@ -477,13 +535,13 @@ function checkCollectables() {
                 collectables[i].y_pos,
                 gameChar_world_x,
                 gameChar_y
-            ) <= 100
+            ) <= 50
         ) {
             if (collectables[i].isFound) {
                 continue;
             }
             collectables[i].isFound = true;
-            game_score += 1;
+            gameScore += 1;
             break;
         }
     }
@@ -503,12 +561,15 @@ function checkPlayerDie() {
 function checkCanyons() {
     // detect whether character is inside the canyon
     var gameChar_world_x = gameChar_x - scrollPos; // define a real game character coordinate
-    // insideCanyon = false;
     for (let i = 0; i < canyons.length; i++) {
+        const offset = SIZES.characterBody / 2;
+        const rightEdge = canyons[i].x_pos + canyons[i].width - offset;
+        const leftEdge = canyons[i].x_pos + offset;
+
         if (
-            gameChar_world_x < canyons[i].x_pos + canyons[i].width &&
-            gameChar_world_x > canyons[i].x_pos &&
-            gameChar_y === 432
+            gameChar_world_x < rightEdge &&
+            gameChar_world_x > leftEdge &&
+            gameChar_y === floorPos_y
         ) {
             insideCanyon = true;
             break;
@@ -544,14 +605,11 @@ function checkFlagPole() {
 
 function startGame() {
     gameState = 'play';
-
     playMusic();
 
     treePos_y = 300;
-
     gameChar_x = 800;
-    gameChar_y = 432;
-
+    gameChar_y = floorPos_y;
     floorPos_x = 0;
 
     cloud = {
@@ -568,7 +626,8 @@ function startGame() {
     };
 
     scrollPos = 0;
-    game_score = 0;
+//    gameScore = 0;
+
 
     flagpole = {
         isReached: false,
@@ -582,32 +641,37 @@ function startGame() {
     isPlummeting = false;
     isJumping = false;
     insideCanyon = false;
+
+    platforms.push(createPlatforms(150, floorPos_y - 100, 130));
+    platforms.push(createPlatforms(1000, floorPos_y - 105, 110));
+    platforms.push(createPlatforms(1200, floorPos_y - 140, 100, true));
+    platforms.push(createPlatforms(1100, floorPos_y - 200, 80));
 }
 
 function gameOver() {
-     noStroke();
-        fill(COLORS.flagPoleFlag);
-        textStyle(BOLD);
-        textSize(20);
-        image(gameOverImg, 180, SIZES.canvasHeight / 3);
+    noStroke();
+    fill(COLORS.flagPoleFlag);
+    textStyle(BOLD);
+    textSize(20);
+    image(gameOverImg, 180, SIZES.canvasHeight / 3);
 
-        text("press space to continue", SIZES.canvasWidth / 3, 400);
+    text("press space to continue", SIZES.canvasWidth / 3, 400);
 }
 
 function startScreen() {
 
-        background(COLORS.sky);
-        image(cat, 400, 250);
+    background(COLORS.sky);
+    image(cat, 400, 250);
 
-        noStroke();
-        fill(255, 255, 255);
-        textStyle(BOLD);
-        textSize(20);
+    noStroke();
+    fill(255, 255, 255);
+    textStyle(BOLD);
+    textSize(20);
 
-        text("press ENTER to start the game", SIZES.canvasWidth / 3, 200);
-        textSize(13);
-        text("Music & sound by Pavel Vorobyov (Slighly Magic)", 650, 550);
-        text("Game design & development by Maria Vorobyeva",  650, 530);
+    text("press ENTER to start the game", SIZES.canvasWidth / 3, 200);
+    textSize(13);
+    text("Music & sound by Pavel Vorobyov (Slighly Magic)", 650, 550);
+    text("Game design & development by Maria Vorobyeva", 650, 530);
 }
 
 function stars() {
@@ -621,34 +685,29 @@ function stars() {
 }
 
 function draw() {
-
     if (gameState === 'startscreen') {
         startScreen();
-
         return;
     }
 
-
-
     if (lives < 1) {
         gameState = 'over';
+        gameScore = 0;
         gameSound.stop();
 
         gameOver();
-
         return
     }
 
     if (gameState === 'play') {
         background(COLORS.sky); //fill the sky blue
-
         noStroke();
-        fill(230,230,180);
-        ellipse(650,100,70,70);
+        fill(230, 230, 180);
+        ellipse(650, 100, 70, 70);
 
         noStroke();
         fill(COLORS.sky);
-        ellipse(630,100,70,70);
+        ellipse(630, 100, 70, 70);
 
         noStroke();
         fill(COLORS.ground);
@@ -656,7 +715,7 @@ function draw() {
         fill(103, 102, 102);
         rect(floorPos_x, SIZES.canvasHeight - 20, 1024, 30); // draw foundation
 
-         push();
+        push();
         stars();
         stroke(COLORS.foundationColorOne); // draw foundation pattern
         strokeWeight(10);
@@ -673,35 +732,33 @@ function draw() {
         }
         pop();
 
-        if (isJumping && gameChar_y === floorPos_y) {
-            gameChar_y -= 100;
+
+        if (isJumping && !isFalling && !isPlummeting) {
+            gameChar_y -= SIZES.jumpElevation;
             isJumping = false;
         }
 
 
-            if (gameChar_y >= floorPos_y && insideCanyon) {
-                // inside canyon and falling!
-                isPlummeting = true;
-                isLeft = false;
-                isRight = false;
-            } else {
-                isPlummeting = false;
-            }
+        if (gameChar_y >= floorPos_y && insideCanyon) {
+            // inside canyon and falling!
+            isPlummeting = true;
+            isLeft = false;
+            isRight = false;
+        } else {
+            isPlummeting = false;
+        }
 
 
     }
 
-    if (game_score === NUMBERS.maxScore && flagpole.isReached) {
+    if (gameScore === NUMBERS.maxScore && flagpole.isReached) {
         image(completeLevelImg, 180, SIZES.canvasHeight / 3);
         return
     }
 
+    tooFarLeft = gameChar_world_x <= SIZES.catPosX;
 
-
-
-
-
-    if (isLeft) {
+    if (isLeft && !tooFarLeft) {
         if (gameChar_x > width * 0.2) {
             gameChar_x -= 5;
         } else {
@@ -715,9 +772,22 @@ function draw() {
         }
     }
 
-    isFalling =
-        (gameChar_y < floorPos_y && !insideCanyon) ||
-        (insideCanyon && gameChar_y < floorPos_y + 120);
+    isFalling = false;
+    if ((gameChar_y < floorPos_y && !insideCanyon) ||
+        (insideCanyon && gameChar_y < floorPos_y + 120)) {
+
+        let isContact = false;
+
+        for (let i = 0; i < platforms.length; i++) {
+            if (platforms[i].checkContact(gameChar_world_x, gameChar_y)) {
+                isContact = true;
+                break;
+            }
+        }
+        if (!isContact) {
+            isFalling = true;
+        }
+    }
 
     if (isFalling) {
         gameChar_y += 3;
@@ -734,9 +804,15 @@ function draw() {
 
     translate(scrollPos, 0);
 
+    gameChar_world_x = gameChar_x - scrollPos;
+
     drawMountains();
     drawClouds(clouds);
     drawTrees();
+    for (let i = 0; i < platforms.length; i++) {
+        platforms[i].draw();
+        platforms[i].move();
+    }
 
     //draw canyons
     for (let i = 0; i < canyons.length; i++) {
@@ -760,8 +836,8 @@ function draw() {
 
     checkCollectables();
 
-    // render the black cat, my favorite character at home :p
-    image(cat, 10, treePos_y + 60);
+    // render the black cat
+    image(cat, SIZES.catPosX, SIZES.catPosY);
 
     renderFlagPole();
     pop();
@@ -774,7 +850,7 @@ function draw() {
     // draw game score
     fill(255);
     noStroke();
-    text("score " + game_score, 30, 20);
+    text("score " + gameScore, 30, 20);
 
 
     // render character in different states
@@ -786,7 +862,7 @@ function draw() {
         renderCharacterJumpRight();
     } else if (isRight && !isFalling) {
         renderCharacterWalkRight();
-    } else if (gameChar_y < floorPos_y) {
+    } else if (isFalling) {
         renderCharacterJump();
     } else if (isPlummeting) {
         renderCharacterJump();
