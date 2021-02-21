@@ -100,14 +100,14 @@ function preload() {
 
     //loading sounds
     soundFormats('mp3', 'wav');
-    gameSound = loadSound("assets/dream98.mp3");
+    gameSound = loadSound("assets/24_release.mp3");
     gameSound.setVolume(0.3);
 
 }
 
 function playMusic() {
     console.log('inside play')
-    // gameSound.loop();
+    gameSound.loop();
 }
 
 
@@ -148,16 +148,21 @@ function renderCharacterFront() {
     ellipse(gameChar_x, gameChar_y - 50, 35);
     ellipse(gameChar_x, gameChar_y - 65, 3);
 
-    // fringe (bangs)
-    ellipse(gameChar_x + 3, gameChar_y - 65, 3, 1);
-    ellipse(gameChar_x - 3, gameChar_y - 65, 3, 1);
-    fill(COLORS.character.hair);
-    noStroke();
 
-
-    // face
+    // face lips
     fill(0);
-    rect(gameChar_x - 5, gameChar_y - 50, 10, 1);
+    // rect(gameChar_x - 5, gameChar_y - 45, 10, 3);
+
+    beginShape();
+    vertex(gameChar_x - 5, gameChar_y - 45);
+    vertex(gameChar_x + 5, gameChar_y - 40);
+    vertex(gameChar_x + 10, gameChar_y - 45);
+
+    endShape();
+
+    // face eyes
+    ellipse(gameChar_x - 5, gameChar_y - 55, 5, 2);
+    ellipse(gameChar_x + 5, gameChar_y - 55, 5, 2);
 
     // body
 
@@ -453,7 +458,6 @@ function drawMountains() {
 }
 
 function drawClouds(clouds) {
-    console.log('drawClouds', clouds)
     for (let i = 0; i < clouds.length; i++) {
         renderCloud(clouds[i]);
     }

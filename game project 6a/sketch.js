@@ -41,8 +41,6 @@ var SIZES = {
     canvasHeight: 576,
 };
 
-
-
 var trees_x = [-1000, -750, -300, 40, 600, 800, 1300, 2000, 2400, 2700];
 var clouds = [-1000, -800, -100, 200, 620, 850, 1550, 1700, 2400];
 var collectables = [
@@ -105,6 +103,7 @@ function renderCharacterFront() {
     fill(0);
     rect(gameChar_x - 5, gameChar_y - 50, 10, 1);
 
+
     // body
     fill(255, 203, 0);
     stroke(0);
@@ -131,10 +130,6 @@ function renderCharacterJump() {
     ellipse(gameChar_x, gameChar_y - 65, 3);
     ellipse(gameChar_x + 3, gameChar_y - 65, 3);
     ellipse(gameChar_x - 3, gameChar_y - 65, 3);
-
-    // face
-    fill(0);
-    rect(gameChar_x - 5, gameChar_y - 50, 10, 1);
 
     // body
     fill(255, 203, 0);
