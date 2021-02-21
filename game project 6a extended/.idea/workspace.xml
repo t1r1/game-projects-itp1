@@ -2,10 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="25ba9e7a-63ab-4453-bc29-0611706a8743" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/sketch.js" beforeDir="false" afterPath="$PROJECT_DIR$/sketch.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../game project 6a/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../game project 6a/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../game project 6a/sketch.js" beforeDir="false" afterPath="$PROJECT_DIR$/../game project 6a/sketch.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -36,10 +33,11 @@
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="prettierjs.PrettierConfiguration.Package" value="$USER_HOME$/lead_front/node_modules/@types/prettier" />
     <property name="run.prettier.on.save" value="true" />
-    <property name="settings.editor.selected.configurable" value="settings.javascript.prettier" />
+    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/modules" />
       <recent name="$PROJECT_DIR$/assets" />
     </key>
   </component>
@@ -55,17 +53,27 @@
       <workItem from="1612451846537" duration="2878000" />
       <workItem from="1612457548727" duration="5837000" />
       <workItem from="1613844072983" duration="4869000" />
-      <workItem from="1613850725475" duration="1240000" />
+      <workItem from="1613850725475" duration="2305000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
+  <component name="Vcs.Log.History.Properties">
+    <option name="COLUMN_ORDER">
+      <list>
+        <option value="0" />
+        <option value="2" />
+        <option value="3" />
+        <option value="1" />
+      </list>
+    </option>
+  </component>
   <component name="WindowStateProjectService">
-    <state x="64" y="23" key="SettingsEditor" timestamp="1613846601674">
+    <state x="64" y="23" key="SettingsEditor" timestamp="1613907015748">
       <screen x="0" y="23" width="1344" height="748" />
     </state>
-    <state x="64" y="23" key="SettingsEditor/0.23.1344.748@0.23.1344.748" timestamp="1613846601674" />
+    <state x="64" y="23" key="SettingsEditor/0.23.1344.748@0.23.1344.748" timestamp="1613907015748" />
   </component>
 </project>

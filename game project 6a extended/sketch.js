@@ -121,74 +121,37 @@ function setup() {
 }
 
 function renderCharacterFront() {
-    strokeWeight(2);
+    strokeWeight(4);
     //head
-    stroke(1);
-
-    // hair center
-    fill(42, 40, 42 );
-    noStroke();
-    ellipse(gameChar_x, gameChar_y - 60, 40);
-
-    // hair left
-    fill(42, 40, 42 );
-    ellipse(gameChar_x - 15, gameChar_y - 55, 30);
-
-    // hair right
-    fill(42, 40, 42 );
-    ellipse(gameChar_x + 12, gameChar_y - 55, 34);
-
-    // head
-    fill(200, 150, 150);
-    ellipse(gameChar_x, gameChar_y - 50, 35);
-    ellipse(gameChar_x, gameChar_y - 65, 3);
-
+    stroke(0);
 
     fill(200, 150, 150);
     ellipse(gameChar_x, gameChar_y - 50, 35);
     ellipse(gameChar_x, gameChar_y - 65, 3);
+    ellipse(gameChar_x + 3, gameChar_y - 65, 3);
+    ellipse(gameChar_x - 3, gameChar_y - 65, 3);
 
-
-    // face lips
+    // face
     fill(0);
-    // rect(gameChar_x - 5, gameChar_y - 45, 10, 3);
+    rect(gameChar_x - 5, gameChar_y - 50, 10, 1);
 
-    beginShape();
-    vertex(gameChar_x - 5, gameChar_y - 45);
-    vertex(gameChar_x + 5, gameChar_y - 40);
-    vertex(gameChar_x + 10, gameChar_y - 45);
-
-    endShape();
-
-    // face eyes
-    ellipse(gameChar_x - 5, gameChar_y - 55, 5, 2);
-    ellipse(gameChar_x + 5, gameChar_y - 55, 5, 2);
 
     // body
-
-    fill(COLORS.character.body);
-    noStroke();
+    fill(255, 203, 0);
+    stroke(0);
     rect(gameChar_x - 13, gameChar_y - 35, 26, 30);
-    rect(gameChar_x - 13, gameChar_y - 30, 28, 2);
-
 
     //feet
     fill(0);
     rect(gameChar_x - 15, gameChar_y - 5, 10, 10); // left foot
     rect(gameChar_x + 5, gameChar_y - 5, 10, 10); // right foot
 
-
-    // arms
-    // рукава
-    fill(COLORS.character.body);
+    // hands
+    fill(200, 150, 150);
     rect(gameChar_x - 23, gameChar_y - 33, 10, 10);
     rect(gameChar_x + 13, gameChar_y - 33, 10, 10);
-
-    // hands
-    fill(COLORS.character.hands);
-    rect(gameChar_x - 26, gameChar_y - 33, 5, 10);
-    rect(gameChar_x + 23, gameChar_y - 33, 5, 10);
 }
+
 
 function renderCharacterJump() {
     strokeWeight(4);
