@@ -2,29 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="25ba9e7a-63ab-4453-bc29-0611706a8743" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/../game project 6a extended/.idea/game project side scrolling.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../game project 6a extended/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../game project 6a extended/.idea/prettier.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../game project 6a extended/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../game project 6a extended/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../game project 6a extended/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../game project 6a extended/2830f48b5e05261c455da72bcbcd904e4532b0be4a66baafdbe47d30b7014818.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../game project 6a extended/assets/24_release.mp3" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../game project 6a extended/assets/cat_face.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../game project 6a extended/assets/complete.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../game project 6a extended/assets/dream98.mp3" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../game project 6a extended/assets/gameover.gif" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../game project 6a extended/assets/gameover.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../game project 6a extended/assets/heart_empty.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../game project 6a extended/assets/heart_full.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../game project 6a extended/cat_face.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../game project 6a extended/draw.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../game project 6a extended/index.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../game project 6a extended/my.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../game project 6a extended/p5.min.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../game project 6a extended/p5.sound.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../game project 6a extended/screen.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../game project 6a extended/sketch.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../game project 6a/sketch.js" beforeDir="false" afterPath="$PROJECT_DIR$/../game project 6a/sketch.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sketch.js" beforeDir="false" afterPath="$PROJECT_DIR$/sketch.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -76,7 +55,7 @@
       <workItem from="1612457548727" duration="5837000" />
       <workItem from="1613844072983" duration="4869000" />
       <workItem from="1613850725475" duration="2573000" />
-      <workItem from="1613926078759" duration="7709000" />
+      <workItem from="1613926078759" duration="9820000" />
     </task>
     <servers />
   </component>

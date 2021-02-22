@@ -50,7 +50,8 @@ const COLORS = {
     },
     startScreen: [0, 0, 0],
     startScreentext: [0, 0, 0],
-    platform: [200, 145, 92]
+    platform: [200, 145, 92],
+    moon: [230, 230, 180]
 };
 
 const SIZES = {
@@ -60,7 +61,7 @@ const SIZES = {
     platform: 10,
     jumpElevation: 150,
     catPosX: -10,
-    catPosY:  360
+    catPosY: 360
 };
 
 
@@ -114,7 +115,7 @@ function preload() {
 }
 
 function playMusic() {
-    gameSound.loop();
+    // gameSound.loop();
 }
 
 function setupClouds() {
@@ -485,6 +486,7 @@ function drawClouds(clouds) {
 }
 
 function keyPressed() {
+    console.log(keyCode)
     switch (gameState) {
         case 'play':
             if (keyCode === keyCodes.KEY_CODE_LEFT) {
@@ -498,12 +500,18 @@ function keyPressed() {
             }
             break;
         case 'over':
+            console.log('inside over')
             if (keyCode === keyCodes.KEY_CODE_SPACE) {
-                console.log('inside space');
+                console.log('inside space over');
                 startGame();
             }
             break;
         case 'startscreen':
+            if (keyCode === keyCodes.KEY_CODE_ENTER) {
+                startGame();
+            }
+            break;
+        case 'complete':
             if (keyCode === keyCodes.KEY_CODE_ENTER) {
                 startGame();
             }
@@ -605,6 +613,7 @@ function checkFlagPole() {
 
 function startGame() {
     gameState = 'play';
+    console.log('gameStart, with state ', gameState)
     playMusic();
 
     treePos_y = 300;
@@ -683,6 +692,39 @@ function stars() {
         point(x, y);
     }
 }
+function renderMoon() {
+    // draw half of the moon's day side
+    noStroke();
+    fill(COLORS.moon);
+    ellipse(650, 100, 70, 70);
+    fill(COLORS.sky);
+    ellipse(630, 100, 70, 70);
+}
+
+function renderGround() {
+    noStroke();
+    fill(COLORS.ground);
+    rect(floorPos_x, floorPos_y, 1024, 144); //draw some green ground
+    fill(103, 102, 102);
+    rect(floorPos_x, SIZES.canvasHeight - 20, 1024, 30); // draw foundation
+
+    // draw foundation layers repeated
+    push();
+    stroke(COLORS.foundationColorOne);
+    strokeWeight(10);
+    for (let i = 0; i < 800; i++) {
+        point(floorPos_x + i * 10, SIZES.canvasHeight - 20);
+    }
+    pop();
+
+    push();
+    stroke(COLORS.foundationColorTwo);
+    strokeWeight(14);
+    for (let i = 0; i < 800; i++) {
+        point(floorPos_x + i * 10, SIZES.canvasHeight - 30);
+    }
+    pop();
+}
 
 function draw() {
     if (gameState === 'startscreen') {
@@ -690,54 +732,47 @@ function draw() {
         return;
     }
 
-    if (lives < 1) {
-        gameState = 'over';
-        gameScore = 0;
-        gameSound.stop();
+    if (gameState === 'complete') {
+        noStroke();
 
+        noFill();
+        background(COLORS.sky);
+        image(completeLevelImg, 180, SIZES.canvasHeight / 3);
+
+        noStroke();
+        fill(COLORS.flagPoleFlag);
+        textStyle(BOLD);
+        textSize(20);
+
+        text("press enter to start again", SIZES.canvasWidth / 3, 400);
+
+
+        return;
+    }
+
+    if (gameState === 'over') {
         gameOver();
+        lives = NUMBERS.maxLives; // reset lives
         return
     }
 
     if (gameState === 'play') {
+        if (lives < 1) {
+            gameState = 'over';
+            gameScore = 0;
+            gameSound.stop();
+        }
+
         background(COLORS.sky); //fill the sky blue
-        noStroke();
-        fill(230, 230, 180);
-        ellipse(650, 100, 70, 70);
+        renderMoon();
 
-        noStroke();
-        fill(COLORS.sky);
-        ellipse(630, 100, 70, 70);
-
-        noStroke();
-        fill(COLORS.ground);
-        rect(floorPos_x, floorPos_y, 1024, 144); //draw some green ground
-        fill(103, 102, 102);
-        rect(floorPos_x, SIZES.canvasHeight - 20, 1024, 30); // draw foundation
-
-        push();
+        renderGround();
         stars();
-        stroke(COLORS.foundationColorOne); // draw foundation pattern
-        strokeWeight(10);
-        for (let i = 0; i < 800; i++) {
-            point(floorPos_x + i * 10, SIZES.canvasHeight - 20);
-        }
-        pop();
-
-        push();
-        stroke(COLORS.foundationColorTwo); // draw foundation pattern
-        strokeWeight(14);
-        for (let i = 0; i < 800; i++) {
-            point(floorPos_x + i * 10, SIZES.canvasHeight - 30);
-        }
-        pop();
-
 
         if (isJumping && !isFalling && !isPlummeting) {
             gameChar_y -= SIZES.jumpElevation;
             isJumping = false;
         }
-
 
         if (gameChar_y >= floorPos_y && insideCanyon) {
             // inside canyon and falling!
@@ -748,125 +783,124 @@ function draw() {
             isPlummeting = false;
         }
 
+        if (gameScore === NUMBERS.maxScore && flagpole.isReached) {
+            gameState = 'complete';
 
-    }
-
-    if (gameScore === NUMBERS.maxScore && flagpole.isReached) {
-        image(completeLevelImg, 180, SIZES.canvasHeight / 3);
-        return
-    }
-
-    tooFarLeft = gameChar_world_x <= SIZES.catPosX;
-
-    if (isLeft && !tooFarLeft) {
-        if (gameChar_x > width * 0.2) {
-            gameChar_x -= 5;
-        } else {
-            scrollPos += 5;
         }
-    } else if (isRight) {
-        if (gameChar_x < width * 0.8) {
-            gameChar_x += 5;
-        } else {
-            scrollPos -= 5;
-        }
-    }
 
-    isFalling = false;
-    if ((gameChar_y < floorPos_y && !insideCanyon) ||
-        (insideCanyon && gameChar_y < floorPos_y + 120)) {
+        tooFarLeft = gameChar_world_x <= SIZES.catPosX;
 
-        let isContact = false;
-
-        for (let i = 0; i < platforms.length; i++) {
-            if (platforms[i].checkContact(gameChar_world_x, gameChar_y)) {
-                isContact = true;
-                break;
+        if (isLeft && !tooFarLeft) {
+            if (gameChar_x > width * 0.2) {
+                gameChar_x -= 5;
+            } else {
+                scrollPos += 5;
+            }
+        } else if (isRight) {
+            if (gameChar_x < width * 0.8) {
+                gameChar_x += 5;
+            } else {
+                scrollPos -= 5;
             }
         }
-        if (!isContact) {
-            isFalling = true;
+
+        isFalling = false;
+        if ((gameChar_y < floorPos_y && !insideCanyon) ||
+            (insideCanyon && gameChar_y < floorPos_y + 120)) {
+
+            let isContact = false;
+
+            for (let i = 0; i < platforms.length; i++) {
+                if (platforms[i].checkContact(gameChar_world_x, gameChar_y)) {
+                    isContact = true;
+                    break;
+                }
+            }
+            if (!isContact) {
+                isFalling = true;
+            }
         }
-    }
 
-    if (isFalling) {
-        gameChar_y += 3;
-        if (!isPlummeting && gameChar_y > floorPos_y) {
-            gameChar_y = floorPos_y;
+        if (isFalling) {
+            gameChar_y += 3;
+            if (!isPlummeting && gameChar_y > floorPos_y) {
+                gameChar_y = floorPos_y;
+            }
         }
-    }
 
-    if (isPlummeting) {
-        gameChar_y += 5;
-    }
-
-    push();
-
-    translate(scrollPos, 0);
-
-    gameChar_world_x = gameChar_x - scrollPos;
-
-    drawMountains();
-    drawClouds(clouds);
-    drawTrees();
-    for (let i = 0; i < platforms.length; i++) {
-        platforms[i].draw();
-        platforms[i].move();
-    }
-
-    //draw canyons
-    for (let i = 0; i < canyons.length; i++) {
-        drawCanyon(canyons[i]);
-    }
-
-    checkCanyons();
-
-    checkPlayerDie();
-
-    if (!flagpole.isReached) {
-        checkFlagPole();
-    }
-
-    //draw collectables
-    for (var i = 0; i < collectables.length; i++) {
-        if (!collectables[i].isFound) {
-            drawCollectable(collectables[i]);
+        if (isPlummeting) {
+            gameChar_y += 5;
         }
-    }
 
-    checkCollectables();
+        push();
 
-    // render the black cat
-    image(cat, SIZES.catPosX, SIZES.catPosY);
+        translate(scrollPos, 0);
 
-    renderFlagPole();
-    pop();
+        gameChar_world_x = gameChar_x - scrollPos;
 
-    // draw lives icons
-    for (let i = 0; i < lives; i++) {
-        image(liveIcon, 28 + i * 25, 30, 20, 20);
-    }
+        drawMountains();
+        drawClouds(clouds);
+        drawTrees();
 
-    // draw game score
-    fill(255);
-    noStroke();
-    text("score " + gameScore, 30, 20);
+        for (let i = 0; i < platforms.length; i++) {
+            platforms[i].draw();
+            platforms[i].move();
+        }
+
+        //draw canyons
+        for (let i = 0; i < canyons.length; i++) {
+            drawCanyon(canyons[i]);
+        }
+
+        checkCanyons();
+
+        checkPlayerDie();
+
+        if (!flagpole.isReached) {
+            checkFlagPole();
+        }
+
+        //draw collectables
+        for (var i = 0; i < collectables.length; i++) {
+            if (!collectables[i].isFound) {
+                drawCollectable(collectables[i]);
+            }
+        }
+
+        checkCollectables();
+
+        // render the black cat
+        image(cat, SIZES.catPosX, SIZES.catPosY);
+
+        renderFlagPole();
+        pop();
+
+        // draw lives icons
+        for (let i = 0; i < lives; i++) {
+            image(liveIcon, 28 + i * 25, 30, 20, 20);
+        }
+
+        // draw game score
+        fill(255);
+        noStroke();
+        text("score " + gameScore, 30, 20);
 
 
-    // render character in different states
-    if (isLeft && isFalling) {
-        renderCharacterJumpLeft();
-    } else if (isLeft && !isFalling) {
-        renderCharacterWalkLeft();
-    } else if (isRight && isFalling) {
-        renderCharacterJumpRight();
-    } else if (isRight && !isFalling) {
-        renderCharacterWalkRight();
-    } else if (isFalling) {
-        renderCharacterJump();
-    } else if (isPlummeting) {
-        renderCharacterJump();
-    } else {
-        renderCharacterFront();
+        // render character in different states
+        if (isLeft && isFalling) {
+            renderCharacterJumpLeft();
+        } else if (isLeft && !isFalling) {
+            renderCharacterWalkLeft();
+        } else if (isRight && isFalling) {
+            renderCharacterJumpRight();
+        } else if (isRight && !isFalling) {
+            renderCharacterWalkRight();
+        } else if (isFalling) {
+            renderCharacterJump();
+        } else if (isPlummeting) {
+            renderCharacterJump();
+        } else {
+            renderCharacterFront();
+        }
     }
 }
