@@ -130,16 +130,7 @@ function setupClouds() {
 function setupStars() {
   const numStars = 50;
   for (let i = 0; i < numStars; i++) {
-    const x = random(0, SIZES.canvasWidth);
-    const y = random(0, SIZES.canvasHeight);
-    let color = [
-      floor(random(128, 255)),
-      floor(random(128, 255)),
-      floor(random(128, 255)),
-    ].join(", ");
-    color = "rgb(" + color + ")";
-    const size = random(3, 7);
-    stars.push(createStar(x, y, size, color));
+    stars.push(createRandomStar(SIZES.canvasWidth, SIZES.canvasHeight));
   }
 }
 
@@ -147,101 +138,9 @@ function setup() {
   createCanvas(SIZES.canvasWidth, SIZES.canvasHeight);
   floorPos_y = 432;
   lives = NUMBERS.maxLives;
+  gameScore = 0;
   setupClouds();
   setupStars();
-}
-
-function createStar(x, y, size, color) {
-  return {
-    x,
-    y,
-    size,
-    color,
-    state: "grow",
-    multiplier: random(0, 1),
-    speed: random(0.01, 0.1),
-    draw() {
-      if (this.state == "grow") {
-        this.multiplier += this.speed;
-        if (this.multiplier >= 1) {
-          this.state = "shrink";
-        }
-      } else {
-        this.multiplier -= this.speed;
-        if (this.multiplier <= 0) {
-          this.state = "grow";
-        }
-      }
-
-      let vectors = [
-        createVector(1, 0),
-        createVector(0, -1),
-        createVector(-1, 0),
-        createVector(0, 1),
-        createVector(1, 1),
-        createVector(1, -1),
-        createVector(-1, -1),
-        createVector(-1, 1),
-      ];
-
-      for (let i = 0; i < 4; i++) {
-        vectors[i].normalize();
-        vectors[i].mult(this.size * this.multiplier);
-      }
-
-      for (let i = 4; i < 8; i++) {
-        vectors[i].normalize();
-        vectors[i].mult((this.size * this.multiplier) / 1.5);
-      }
-      stroke(this.color);
-      strokeWeight(1);
-      for (let i = 0; i < vectors.length; i++) {
-        const v = vectors[i];
-        line(this.x, this.y, this.x + v.x, this.y + v.y);
-      }
-    },
-  };
-}
-
-function createPlatforms(x, y, length, isMoving) {
-  return {
-    x,
-    y,
-    length,
-    isMoving,
-    speed: 1,
-    state: "right",
-    maxX: x + length,
-    minX: x,
-    draw: function () {
-      fill(COLORS.platform);
-      rect(this.x, this.y, this.length, SIZES.platform);
-    },
-    checkContact: function (gc_x, gc_y) {
-      if (gc_x > this.x && gc_x < this.x + this.length) {
-        const distance = this.y - gc_y;
-        return distance > 0 && distance < 5; // is above the platform, but not very much (5)
-      }
-    },
-
-    move: function () {
-      if (!this.isMoving) {
-        return;
-      }
-
-      if (this.state === "right") {
-        this.x += this.speed;
-        if (this.x >= this.maxX) {
-          this.state = "left";
-        }
-      } else {
-        this.x -= this.speed;
-        if (this.x <= this.minX) {
-          this.state = "right";
-        }
-      }
-    },
-  };
 }
 
 function renderCharacterFront() {
@@ -697,7 +596,7 @@ function startGame() {
   };
 
   scrollPos = 0;
-  //    gameScore = 0;
+
 
   flagpole = {
     isReached: false,
@@ -712,10 +611,10 @@ function startGame() {
   isJumping = false;
   insideCanyon = false;
 
-  platforms.push(createPlatforms(150, floorPos_y - 100, 130));
-  platforms.push(createPlatforms(1000, floorPos_y - 105, 110));
-  platforms.push(createPlatforms(1200, floorPos_y - 140, 100, true));
-  platforms.push(createPlatforms(1100, floorPos_y - 200, 80));
+  platforms.push(createPlatform(150, floorPos_y - 100, 130));
+  platforms.push(createPlatform(1000, floorPos_y - 105, 110));
+  platforms.push(createPlatform(1200, floorPos_y - 140, 100, true));
+  platforms.push(createPlatform(1100, floorPos_y - 200, 80));
 }
 
 function gameOver() {
@@ -828,12 +727,8 @@ function draw() {
     for (let i = 0; i < stars.length; i++) {
       stars[i].draw();
     }
-
     renderMoon();
-
     renderGround();
-
-    // stars();
 
     if (isJumping && !isFalling && !isPlummeting) {
       gameChar_y -= SIZES.jumpElevation;
