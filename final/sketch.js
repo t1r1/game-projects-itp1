@@ -138,6 +138,7 @@ function setup() {
   createCanvas(SIZES.canvasWidth, SIZES.canvasHeight);
   floorPos_y = 432;
   lives = NUMBERS.maxLives;
+  gameScore = 0;
   setupClouds();
   setupStars();
 }
@@ -595,7 +596,7 @@ function startGame() {
   };
 
   scrollPos = 0;
-  //    gameScore = 0;
+
 
   flagpole = {
     isReached: false,
