@@ -1,3 +1,5 @@
+// constructor function that creates random positioned stars with a random speed of flickering
+
 function createRandomStar(canvasWidth, canvasHeight) {
   let color = [
     floor(random(128, 255)),
@@ -13,7 +15,7 @@ function createRandomStar(canvasWidth, canvasHeight) {
     color,
     state: "grow",
     multiplier: random(0, 1),
-    speed: random(0.01, 0.1),
+    speed: random(0.01, 0.06),
     draw() {
       if (this.state == "grow") {
         this.multiplier += this.speed;

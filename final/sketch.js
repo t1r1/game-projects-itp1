@@ -1,28 +1,28 @@
-var gameChar_x = 0;
-var gameChar_y = 0;
-var gameChar_world_x = 0;
-var treePos_x = 0;
-var treePos_y = 0;
-var floorPos_x = 0;
-var floorPos_y = 0;
-var canyon = {};
-var collectable = {};
-var cloud = {};
-var mountains = {};
-var insideCanyon = false;
-var gameScore = 0;
-var platforms = [];
-var tooFarLeft = false;
+let gameChar_x = 0;
+let gameChar_y = 0;
+let gameChar_world_x = 0;
+let treePos_y = 0;
+let floorPos_x = 0;
+let floorPos_y = 0;
+let scrollPos;
+let cloud = {};
+let mountains = {};
+let insideCanyon = false;
+let gameScore = 0;
+let platforms = [];
+let tooFarLeft = false;
 
-var lives = null;
-var gameState = "startscreen"; // initial state
+let lives = null;
 
-var isLeft = false;
-var isRight = false;
-var isFalling = false;
-var isPlummeting = false;
-var isJumping = false;
-var flagpole = {};
+// initial game state. other possible variants: 'over', 'play', 'complete'
+let gameState = "startscreen"; 
+
+let isLeft = false;
+let isRight = false;
+let isFalling = false;
+let isPlummeting = false;
+let isJumping = false;
+let flagpole = {};
 
 const keyCodes = {
   KEY_CODE_LEFT: 37,
@@ -30,12 +30,11 @@ const keyCodes = {
   KEY_CODE_SPACE: 32,
   KEY_CODE_ENTER: 13,
 };
-var scrollPos;
+
 
 const COLORS = {
   treeCrown: [63, 90, 56],
   treeTrunk: [67, 58, 34],
-  // sky: [98, 180, 229],
   sky: [51, 56, 99],
   cloud: [78, 191, 239],
   ground: [117, 166, 91],
@@ -64,19 +63,19 @@ const SIZES = {
   catPosY: 360,
 };
 
-var trees_x = [-300, 40, 600, 800, 1370, 2000, 2400, 2700, 3000, 3400];
-var clouds = [];
+const trees_x = [-300, 40, 600, 800, 1370, 2000, 2400, 2700, 3000, 3400];
+const clouds = [];
 
 const cloudSpeed = [];
-var collectables = [
+const collectables = [
   { x_pos: 200, isFound: false, y_pos: 280, size: 50 },
   { x_pos: 460, isFound: false, y_pos: 280, size: 50 },
   { x_pos: 1250, isFound: false, y_pos: 250, size: 50 },
   { x_pos: 1050, isFound: false, y_pos: 290, size: 50 },
 ];
-var mountains_x = [300, 1500];
-var mountains_x_snow = [500, 1700];
-var canyons = [
+const mountains_x = [300, 1500];
+const mountains_x_snow = [500, 1700];
+const canyons = [
   {
     x_pos: 120,
     width: 120,
@@ -86,13 +85,13 @@ var canyons = [
   { x_pos: 1000, width: 120, depth: 120, isCharacterInside: false },
 ];
 
-var NUMBERS = {
+const NUMBERS = {
   maxLives: 3,
   minLives: 1,
   maxScore: collectables.length,
 };
 
-let stars = [];
+const stars = [];
 
 let cat;
 let liveIcon;
@@ -496,7 +495,6 @@ function keyReleased() {
 }
 
 function checkCollectables() {
-  var gameChar_world_x = gameChar_x - scrollPos; // define a real game character coordinate
   for (let i = 0; i < collectables.length; i++) {
     if (
       dist(
@@ -529,7 +527,6 @@ function checkPlayerDie() {
 
 function checkCanyons() {
   // detect whether character is inside the canyon
-  var gameChar_world_x = gameChar_x - scrollPos; // define a real game character coordinate
   for (let i = 0; i < canyons.length; i++) {
     const offset = SIZES.characterBody / 2;
     const rightEdge = canyons[i].x_pos + canyons[i].width - offset;
@@ -564,8 +561,7 @@ function renderFlagPole() {
 }
 
 function checkFlagPole() {
-  var gameChar_world_x = gameChar_x - scrollPos;
-  var distance = abs(gameChar_world_x - flagpole.x_pos);
+  const distance = abs(gameChar_world_x - flagpole.x_pos);
 
   if (distance <= 15) {
     flagpole.isReached = true;
@@ -822,7 +818,7 @@ function draw() {
     }
 
     //draw collectables
-    for (var i = 0; i < collectables.length; i++) {
+    for (let i = 0; i < collectables.length; i++) {
       if (!collectables[i].isFound) {
         drawCollectable(collectables[i]);
       }
