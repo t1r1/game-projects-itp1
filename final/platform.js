@@ -16,6 +16,7 @@ function createPlatform(x, y, length, isMoving) {
       const offset = SIZES.characterBody / 2;
       const leftEdge = this.x - offset;
       const rightEdge = this.x + this.length + offset;
+
       if (gc_x > leftEdge && gc_x < rightEdge) {
         const distance = this.y - gc_y;
         return distance > 0 && distance < 5; // is above the platform, but not very much (5)

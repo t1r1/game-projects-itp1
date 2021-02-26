@@ -4,75 +4,26 @@ let gameChar_world_x = 0;
 let treePos_y = 0;
 let floorPos_x = 0;
 let floorPos_y = 0;
-let scrollPos;
 let cloud = {};
 let mountains = {};
 let insideCanyon = false;
 let gameScore = 0;
 let platforms = [];
 let tooFarLeft = false;
+let character = null;
 
 let lives = null;
 
 // initial game state. other possible variants: 'over', 'play', 'complete'
-let gameState = "startscreen"; 
+let gameState = "startscreen";
 
-let isLeft = false;
-let isRight = false;
-let isFalling = false;
 let isPlummeting = false;
-let isJumping = false;
 let flagpole = {};
 
-const keyCodes = {
-  KEY_CODE_LEFT: 37,
-  KEY_CODE_RIGHT: 39,
-  KEY_CODE_SPACE: 32,
-  KEY_CODE_ENTER: 13,
-};
-
-
-const COLORS = {
-  treeCrown: [63, 90, 56],
-  treeTrunk: [67, 58, 34],
-  sky: [51, 56, 99],
-  cloud: [78, 191, 239],
-  ground: [117, 166, 91],
-  blueWater: [4, 117, 185],
-  flagPoleFlag: [241, 55, 82],
-  foundationColorOne: [96, 107, 53],
-  foundationColorTwo: [68, 93, 58],
-  character: {
-    body: [228, 105, 74],
-    hands: [200, 150, 150],
-    hair: [219, 218, 158],
-  },
-  startScreen: [0, 0, 0],
-  startScreentext: [0, 0, 0],
-  platform: [200, 145, 92],
-  moon: [230, 230, 180],
-};
-
-const SIZES = {
-  canvasWidth: 1024,
-  canvasHeight: 576,
-  characterBody: 35,
-  platform: 10,
-  jumpElevation: 150,
-  catPosX: -10,
-  catPosY: 360,
-};
-
-const trees_x = [-300, 40, 600, 800, 1370, 2000, 2400, 2700, 3000, 3400];
 const clouds = [];
 
 const cloudSpeed = [];
-const collectables = [
-  { x_pos: 200, isFound: false, y_pos: 280, size: 50 },
-  { x_pos: 460, isFound: false, y_pos: 280, size: 50 },
-  { x_pos: 1250, isFound: false, y_pos: 250, size: 50 },
-  { x_pos: 1050, isFound: false, y_pos: 290, size: 50 },
-];
+
 const mountains_x = [300, 1500];
 const mountains_x_snow = [500, 1700];
 const canyons = [
@@ -84,12 +35,6 @@ const canyons = [
   },
   { x_pos: 1000, width: 120, depth: 120, isCharacterInside: false },
 ];
-
-const NUMBERS = {
-  maxLives: 3,
-  minLives: 1,
-  maxScore: collectables.length,
-};
 
 const stars = [];
 
@@ -451,13 +396,17 @@ function keyPressed() {
   switch (gameState) {
     case "play":
       if (keyCode === keyCodes.KEY_CODE_LEFT) {
-        isLeft = true;
+        character.walkLeft();
       }
       if (keyCode === keyCodes.KEY_CODE_RIGHT) {
-        isRight = true;
+        character.walkRight();
       }
-      if (keyCode === keyCodes.KEY_CODE_SPACE && !isFalling && !isPlummeting) {
-        isJumping = true;
+      if (
+        keyCode === keyCodes.KEY_CODE_SPACE &&
+        !character.isFalling &&
+        !character.isPlummeting
+      ) {
+        character.jump();
       }
       break;
     case "over":
@@ -484,13 +433,13 @@ function keyPressed() {
 
 function keyReleased() {
   if (keyCode === keyCodes.KEY_CODE_LEFT) {
-    isLeft = false;
+    character.front();
   }
   if (keyCode === keyCodes.KEY_CODE_RIGHT) {
-    isRight = false;
+    character.front();
   }
   if (keyCode === keyCodes.KEY_CODE_SPACE) {
-    isPlummeting = false;
+    character.resetState();
   }
 }
 
@@ -515,6 +464,7 @@ function checkCollectables() {
 }
 
 function checkPlayerDie() {
+  // remove
   if (gameChar_y > SIZES.canvasHeight) {
     console.log("is dead");
     lives -= 1;
@@ -525,23 +475,23 @@ function checkPlayerDie() {
   }
 }
 
-function checkCanyons() {
-  // detect whether character is inside the canyon
-  for (let i = 0; i < canyons.length; i++) {
-    const offset = SIZES.characterBody / 2;
-    const rightEdge = canyons[i].x_pos + canyons[i].width - offset;
-    const leftEdge = canyons[i].x_pos + offset;
+// function checkCanyons() {
+//   // detect whether character is inside the canyon
+//   for (let i = 0; i < canyons.length; i++) {
+//     const offset = SIZES.characterBody / 2;
+//     const rightEdge = canyons[i].x_pos + canyons[i].width - offset;
+//     const leftEdge = canyons[i].x_pos + offset;
 
-    if (
-      gameChar_world_x < rightEdge &&
-      gameChar_world_x > leftEdge &&
-      gameChar_y === floorPos_y
-    ) {
-      insideCanyon = true;
-      break;
-    }
-  }
-}
+//     if (
+//       gameChar_world_x < rightEdge &&
+//       gameChar_world_x > leftEdge &&
+//       gameChar_y === floorPos_y
+//     ) {
+//       insideCanyon = true;
+//       break;
+//     }
+//   }
+// }
 
 function renderFlagPole() {
   push();
@@ -574,9 +524,10 @@ function startGame() {
   playMusic();
 
   treePos_y = 300;
-  gameChar_x = 800;
+  gameChar_x = 90;
   gameChar_y = floorPos_y;
   floorPos_x = 0;
+  character = createCharacter(gameChar_y, gameChar_y);
 
   cloud = {
     y_pos: 100,
@@ -591,23 +542,20 @@ function startGame() {
     mountain_y_pos: 200,
   };
 
-  scrollPos = 0;
-
-
   flagpole = {
     isReached: false,
     x_pos: 2600,
   };
 
   // drop all the flags
-  isLeft = false;
-  isRight = false;
-  isFalling = false;
+
+  character.resetDir();
+  character.resetState();
+
   isPlummeting = false;
-  isJumping = false;
   insideCanyon = false;
 
-  platforms.push(createPlatform(150, floorPos_y - 100, 130));
+  platforms.push(createPlatform(150, floorPos_y - 100, 70));
   platforms.push(createPlatform(1000, floorPos_y - 105, 110));
   platforms.push(createPlatform(1200, floorPos_y - 140, 100, true));
   platforms.push(createPlatform(1100, floorPos_y - 200, 80));
@@ -726,74 +674,37 @@ function draw() {
     renderMoon();
     renderGround();
 
-    if (isJumping && !isFalling && !isPlummeting) {
-      gameChar_y -= SIZES.jumpElevation;
-      isJumping = false;
-    }
-
-    if (gameChar_y >= floorPos_y && insideCanyon) {
-      // inside canyon and falling!
-      isPlummeting = true;
-      isLeft = false;
-      isRight = false;
-    } else {
-      isPlummeting = false;
-    }
+    character.checkIsPlummeting();
 
     if (gameScore === NUMBERS.maxScore && flagpole.isReached) {
       gameState = "complete";
     }
 
     tooFarLeft = gameChar_world_x <= SIZES.catPosX;
+    // TODO add ellipse
 
-    if (isLeft && !tooFarLeft) {
-      if (gameChar_x > width * 0.2) {
-        gameChar_x -= 5;
-      } else {
-        scrollPos += 5;
-      }
-    } else if (isRight) {
-      if (gameChar_x < width * 0.8) {
-        gameChar_x += 5;
-      } else {
-        scrollPos -= 5;
-      }
-    }
+    // isFalling = false;
 
-    isFalling = false;
-    if (
-      (gameChar_y < floorPos_y && !insideCanyon) ||
-      (insideCanyon && gameChar_y < floorPos_y + 120)
-    ) {
-      let isContact = false;
+    character.checkPlatformContact();
 
-      for (let i = 0; i < platforms.length; i++) {
-        if (platforms[i].checkContact(gameChar_world_x, gameChar_y)) {
-          isContact = true;
-          break;
-        }
-      }
-      if (!isContact) {
-        isFalling = true;
-      }
-    }
+    // if (isFalling) {
+    //   gameChar_y += 3;
+    //   if (!isPlummeting && gameChar_y > floorPos_y) {
+    //     gameChar_y = floorPos_y;
+    //   }
+    // }
 
-    if (isFalling) {
-      gameChar_y += 3;
-      if (!isPlummeting && gameChar_y > floorPos_y) {
-        gameChar_y = floorPos_y;
-      }
-    }
-
-    if (isPlummeting) {
-      gameChar_y += 5;
-    }
+    // if (isPlummeting) {
+    //   gameChar_y += 5;
+    // }
 
     push();
 
-    translate(scrollPos, 0);
+    // translate(character.scrollPos, 0);
+    character.updateScrollPos();
+    character.updateWorldX();
 
-    gameChar_world_x = gameChar_x - scrollPos;
+    // gameChar_world_x = character.x - character.scrollPos;
 
     drawMountains();
     drawClouds(clouds);
@@ -809,9 +720,9 @@ function draw() {
       drawCanyon(canyons[i]);
     }
 
-    checkCanyons();
+    character.checkInsideCanyons();
 
-    checkPlayerDie();
+    character.checkPlayerDie();
 
     if (!flagpole.isReached) {
       checkFlagPole();
@@ -842,21 +753,23 @@ function draw() {
     noStroke();
     text("score " + gameScore, 30, 20);
 
+    character.draw();
+
     // render character in different states
-    if (isLeft && isFalling) {
-      renderCharacterJumpLeft();
-    } else if (isLeft && !isFalling) {
-      renderCharacterWalkLeft();
-    } else if (isRight && isFalling) {
-      renderCharacterJumpRight();
-    } else if (isRight && !isFalling) {
-      renderCharacterWalkRight();
-    } else if (isFalling) {
-      renderCharacterJump();
-    } else if (isPlummeting) {
-      renderCharacterJump();
-    } else {
-      renderCharacterFront();
-    }
+    // if (isLeft && isFalling) {
+    //   renderCharacterJumpLeft();
+    // } else if (isLeft && !isFalling) {
+    //   renderCharacterWalkLeft();
+    // } else if (isRight && isFalling) {
+    //   renderCharacterJumpRight();
+    // } else if (isRight && !isFalling) {
+    //   renderCharacterWalkRight();
+    // } else if (isFalling) {
+    //   renderCharacterJump();
+    // } else if (isPlummeting) {
+    //   renderCharacterJump();
+    // } else {
+    //   renderCharacterFront();
+    // }
   }
 }
