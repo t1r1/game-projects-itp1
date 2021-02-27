@@ -6,7 +6,6 @@ let floorPos_x = 0;
 let floorPos_y = 0;
 let cloud = {};
 let mountains = {};
-let insideCanyon = false;
 let gameScore = 0;
 let platforms = [];
 let tooFarLeft = false;
@@ -17,7 +16,6 @@ let lives = null;
 // initial game state. other possible variants: 'over', 'play', 'complete'
 let gameState = "startscreen";
 
-let isPlummeting = false;
 let flagpole = {};
 
 const clouds = [];
@@ -412,7 +410,6 @@ function keyPressed() {
     case "over":
       console.log("inside over");
       if (keyCode === keyCodes.KEY_CODE_SPACE) {
-        console.log("inside space over");
         startGame();
       }
       break;
@@ -449,8 +446,8 @@ function checkCollectables() {
       dist(
         collectables[i].x_pos,
         collectables[i].y_pos,
-        gameChar_world_x,
-        gameChar_y
+        character.world_x,
+        character.y
       ) <= 50
     ) {
       if (collectables[i].isFound) {
@@ -462,36 +459,6 @@ function checkCollectables() {
     }
   }
 }
-
-function checkPlayerDie() {
-  // remove
-  if (gameChar_y > SIZES.canvasHeight) {
-    console.log("is dead");
-    lives -= 1;
-    gameSound.stop();
-    if (lives > 0) {
-      startGame();
-    }
-  }
-}
-
-// function checkCanyons() {
-//   // detect whether character is inside the canyon
-//   for (let i = 0; i < canyons.length; i++) {
-//     const offset = SIZES.characterBody / 2;
-//     const rightEdge = canyons[i].x_pos + canyons[i].width - offset;
-//     const leftEdge = canyons[i].x_pos + offset;
-
-//     if (
-//       gameChar_world_x < rightEdge &&
-//       gameChar_world_x > leftEdge &&
-//       gameChar_y === floorPos_y
-//     ) {
-//       insideCanyon = true;
-//       break;
-//     }
-//   }
-// }
 
 function renderFlagPole() {
   push();
@@ -510,24 +477,13 @@ function renderFlagPole() {
   pop(); // cancel stroke weight at the end
 }
 
-function checkFlagPole() {
-  const distance = abs(gameChar_world_x - flagpole.x_pos);
-
-  if (distance <= 15) {
-    flagpole.isReached = true;
-  }
-}
-
 function startGame() {
   gameState = "play";
-  console.log("gameStart, with state ", gameState);
   playMusic();
 
   treePos_y = 300;
-  gameChar_x = 90;
-  gameChar_y = floorPos_y;
   floorPos_x = 0;
-  character = createCharacter(gameChar_y, gameChar_y);
+  character = createCharacter(90, floorPos_y); // initialize a character with start x and y coordinates
 
   cloud = {
     y_pos: 100,
@@ -551,9 +507,6 @@ function startGame() {
 
   character.resetDir();
   character.resetState();
-
-  isPlummeting = false;
-  insideCanyon = false;
 
   platforms.push(createPlatform(150, floorPos_y - 100, 70));
   platforms.push(createPlatform(1000, floorPos_y - 105, 110));
@@ -683,28 +636,12 @@ function draw() {
     tooFarLeft = gameChar_world_x <= SIZES.catPosX;
     // TODO add ellipse
 
-    // isFalling = false;
-
     character.checkPlatformContact();
-
-    // if (isFalling) {
-    //   gameChar_y += 3;
-    //   if (!isPlummeting && gameChar_y > floorPos_y) {
-    //     gameChar_y = floorPos_y;
-    //   }
-    // }
-
-    // if (isPlummeting) {
-    //   gameChar_y += 5;
-    // }
 
     push();
 
-    // translate(character.scrollPos, 0);
     character.updateScrollPos();
     character.updateWorldX();
-
-    // gameChar_world_x = character.x - character.scrollPos;
 
     drawMountains();
     drawClouds(clouds);
@@ -725,7 +662,7 @@ function draw() {
     character.checkPlayerDie();
 
     if (!flagpole.isReached) {
-      checkFlagPole();
+      character.checkFlagPole();
     }
 
     //draw collectables
