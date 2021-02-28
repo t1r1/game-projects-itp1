@@ -44,6 +44,7 @@ const collectables = [
   { x_pos: 1250, isFound: false, y_pos: 210, size: 50 },
   { x_pos: 1050, isFound: false, y_pos: 290, size: 50 },
   { x_pos: 2250, isFound: false, y_pos: 290, size: 50 },
+  { x_pos: 1420, isFound: false, y_pos: 115, size: 50 },
 ];
 
 const NUMBERS = {

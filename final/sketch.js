@@ -27,6 +27,15 @@ const canyons = [
   { x_pos: 1000, width: 120, depth: 120, isCharacterInside: false },
 ];
 
+const ladder = {
+  firstLevel: {
+    xPos: 2150,
+    yPos: 0,
+    xSize: 200,
+    ySize: 100,
+  },
+};
+
 const stars = [];
 
 let cat;
@@ -74,6 +83,7 @@ function setupStars() {
 function setup() {
   createCanvas(SIZES.canvasWidth, SIZES.canvasHeight);
   floorPos_y = 432;
+  ladder.firstLevel.yPos = 333;
   lives = NUMBERS.maxLives;
   gameScore = 0;
   setupClouds();
@@ -100,6 +110,16 @@ function renderTree(xPos) {
     treePos_y - 100,
     xPos + 70,
     treePos_y + 19
+  );
+}
+
+function drawLadder() {
+  fill(COLORS.treeCrown);
+  rect(
+    ladder.firstLevel.xPos,
+    ladder.firstLevel.yPos,
+    ladder.firstLevel.xSize,
+    ladder.firstLevel.ySize
   );
 }
 
@@ -293,6 +313,7 @@ function startGame() {
   platforms.push(createPlatform(1000, floorPos_y - 105, 110));
   platforms.push(createPlatform(1200, floorPos_y - 140, 100, true));
   platforms.push(createPlatform(1100, floorPos_y - 200, 80));
+  platforms.push(createPlatform(1400, floorPos_y - 250, 100));
 }
 
 function gameOver() {
@@ -430,6 +451,7 @@ function draw() {
     drawMountains();
     drawClouds();
     drawTrees();
+    drawLadder();
 
     for (let i = 0; i < platforms.length; i++) {
       platforms[i].draw();
