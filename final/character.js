@@ -1,5 +1,4 @@
 function createCharacter(x, y) {
-  console.log(canyons);
   return {
     x,
     y,
@@ -20,12 +19,8 @@ function createCharacter(x, y) {
         this.y += 3;
         if (!this.isPlummeting && this.y > floorPos_y) {
           this.y = floorPos_y;
+          this.isFalling = false;
         }
-      }
-
-      if (this.isJumping && !this.isFalling && !this.isPlummeting) {
-        this.y -= SIZES.jumpElevation;
-        this.isJumping = false;
       }
 
       if (this.direction === "right") {
@@ -56,15 +51,11 @@ function createCharacter(x, y) {
           if (this.isFalling || this.isPlummeting) {
             this.drawFallLeft();
           } else {
-            console.log("inside else draw left");
             this.drawLeft();
           }
           break;
         case "front":
           this.drawFront();
-          if (this.isJumping) {
-            this.drawJump();
-          }
 
           break;
         case "right":
@@ -120,10 +111,7 @@ function createCharacter(x, y) {
           }
         }
 
-        if (!isContact) {
-          console.log("внутри проверки isContact");
-          this.fall();
-        }
+        this.isFalling = !isContact;
       }
     },
     checkPlayerDie: function () {
@@ -136,17 +124,12 @@ function createCharacter(x, y) {
       }
     },
     jump: function () {
-      this.isJumping = true;
+      this.y -= SIZES.jumpElevation;
     },
     fall: function () {
       this.isFalling = true;
     },
-    resetState: function () {
-      this.isFalling = false;
-      this.isJumping = false;
-    },
     walkLeft: function () {
-      console.log("inside walk left", width);
       this.direction = "left";
     },
     walkRight: function () {
@@ -310,7 +293,6 @@ function createCharacter(x, y) {
       rect(this.x + 13, this.y - 34, 10, 10);
     },
     drawLeft: function () {
-      console.log("inside drawLeft");
       strokeWeight(4);
       //head
       stroke(0);

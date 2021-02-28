@@ -21,6 +21,7 @@ function createPlatform(x, y, length, isMoving) {
         const distance = this.y - gc_y;
         return distance > 0 && distance < 5; // is above the platform, but not very much (5)
       }
+      return false;
     },
 
     move: function () {
