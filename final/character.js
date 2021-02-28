@@ -53,9 +53,10 @@ function createCharacter(x, y) {
 
       switch (this.direction) {
         case "left":
-          if (this.isFalling) {
+          if (this.isFalling || this.isPlummeting) {
             this.drawFallLeft();
           } else {
+            console.log("inside else draw left");
             this.drawLeft();
           }
           break;
@@ -67,7 +68,12 @@ function createCharacter(x, y) {
 
           break;
         case "right":
-          this.drawRight();
+          if (this.isFalling || this.isPlummeting) {
+            this.drawFallRight();
+          } else {
+            this.drawRight();
+          }
+
           break;
         default:
           console.error("unknown direction - ", this.direction);
@@ -114,8 +120,8 @@ function createCharacter(x, y) {
           }
         }
 
-        console.log("isContact ", isContact);
         if (!isContact) {
+          console.log("внутри проверки isContact");
           this.fall();
         }
       }
@@ -176,6 +182,36 @@ function createCharacter(x, y) {
       fill(0);
       rect(this.x - 15, this.y - 5, 10, 15); // left foot
       rect(this.x + 5, this.y - 5, 10, 15); // right foot
+
+      // hands
+      fill(COLORS.character.hands);
+      rect(this.x - 23, this.y - 40, 10, 10);
+      rect(this.x + 13, this.y - 40, 10, 10);
+    },
+    drawFallRight: function () {
+      strokeWeight(4);
+      //head
+      stroke(0);
+
+      fill(200, 150, 150);
+      ellipse(this.x, this.y - 50, 35);
+      ellipse(this.x, this.y - 65, 3);
+      ellipse(this.x + 3, this.y - 65, 3);
+      ellipse(this.x - 3, this.y - 65, 3);
+
+      // face
+      fill(0);
+      rect(this.x, this.y - 50, 10, 1);
+
+      // body
+      fill(COLORS.character.body);
+      stroke(0);
+      rect(this.x - 13, this.y - 35, 26, 20);
+
+      //feet
+      fill(0);
+      rect(this.x - 15, this.y - 13, 10, 13); // left foot
+      rect(this.x + 5, this.y - 10, 8, 10); // right foot
 
       // hands
       fill(COLORS.character.hands);
@@ -274,6 +310,7 @@ function createCharacter(x, y) {
       rect(this.x + 13, this.y - 34, 10, 10);
     },
     drawLeft: function () {
+      console.log("inside drawLeft");
       strokeWeight(4);
       //head
       stroke(0);
