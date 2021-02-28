@@ -55,8 +55,11 @@ function createCharacter(x, y) {
           }
           break;
         case "front":
-          this.drawFront();
-
+          if (this.isFalling || this.isPlummeting) {
+            this.drawFallFront();
+          } else {
+            this.drawFront();
+          }
           break;
         case "right":
           if (this.isFalling || this.isPlummeting) {
@@ -117,7 +120,6 @@ function createCharacter(x, y) {
     checkPlayerDie: function () {
       if (this.y > SIZES.canvasHeight) {
         lives -= 1;
-        gameSound.stop();
         if (lives > 0) {
           startGame();
         }
@@ -203,7 +205,7 @@ function createCharacter(x, y) {
       rect(this.x - 23, this.y - 40, 10, 10);
       rect(this.x + 13, this.y - 40, 10, 10);
     },
-    drawJump: function () {
+    drawFallFront: function () {
       strokeWeight(4);
       //head
       stroke(0);
@@ -249,7 +251,7 @@ function createCharacter(x, y) {
       rect(this.x - 5, this.y - 50, 10, 1);
 
       // body
-      fill(255, 203, 0);
+      fill(COLORS.character.body);
       stroke(0);
       rect(this.x - 13, this.y - SIZES.characterBody, 26, 30);
 

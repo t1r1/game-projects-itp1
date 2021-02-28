@@ -1,6 +1,3 @@
-let gameChar_x = 0;
-let gameChar_y = 0;
-let gameChar_world_x = 0;
 let treePos_y = 0;
 let floorPos_x = 0;
 let floorPos_y = 0;
@@ -52,11 +49,15 @@ function preload() {
 }
 
 function playMusic() {
-  // gameSound.loop();
+  gameSound.loop();
+}
+
+function stopMusic() {
+  gameSound.stop();
 }
 
 function setupClouds() {
-  const numClouds = 5;
+  const numClouds = 10;
   clouds = [];
   for (let i = 0; i < numClouds; i++) {
     clouds.push(createCloud());
@@ -77,192 +78,6 @@ function setup() {
   gameScore = 0;
   setupClouds();
   setupStars();
-}
-
-function renderCharacterFront() {
-  strokeWeight(4);
-  //head
-  stroke(0);
-
-  fill(200, 150, 150);
-  ellipse(gameChar_x, gameChar_y - 50, SIZES.characterBody);
-  ellipse(gameChar_x, gameChar_y - 65, 3);
-  ellipse(gameChar_x + 3, gameChar_y - 65, 3);
-  ellipse(gameChar_x - 3, gameChar_y - 65, 3);
-
-  // face
-  fill(0);
-  rect(gameChar_x - 5, gameChar_y - 50, 10, 1);
-
-  // body
-  fill(255, 203, 0);
-  stroke(0);
-  rect(gameChar_x - 13, gameChar_y - SIZES.characterBody, 26, 30);
-
-  //feet
-  fill(0);
-  rect(gameChar_x - 15, gameChar_y - 5, 10, 10); // left foot
-  rect(gameChar_x + 5, gameChar_y - 5, 10, 10); // right foot
-
-  // hands
-  fill(200, 150, 150);
-  rect(gameChar_x - 23, gameChar_y - 33, 10, 10);
-  rect(gameChar_x + 13, gameChar_y - 33, 10, 10);
-}
-
-function renderCharacterJump() {
-  strokeWeight(4);
-  //head
-  stroke(0);
-
-  fill(200, 150, 150);
-  ellipse(gameChar_x, gameChar_y - 50, 35);
-  ellipse(gameChar_x, gameChar_y - 65, 3);
-  ellipse(gameChar_x + 3, gameChar_y - 65, 3);
-  ellipse(gameChar_x - 3, gameChar_y - 65, 3);
-
-  // face
-  fill(0);
-  rect(gameChar_x - 5, gameChar_y - 50, 10, 1);
-
-  // body
-  fill(COLORS.character.body);
-  stroke(0);
-  rect(gameChar_x - 13, gameChar_y - 35, 26, 20);
-
-  //feet
-  fill(0);
-  rect(gameChar_x - 15, gameChar_y - 5, 10, 15); // left foot
-  rect(gameChar_x + 5, gameChar_y - 5, 10, 15); // right foot
-
-  // hands
-  fill(COLORS.character.hands);
-  rect(gameChar_x - 23, gameChar_y - 40, 10, 10);
-  rect(gameChar_x + 13, gameChar_y - 40, 10, 10);
-}
-
-function renderCharacterJumpRight() {
-  strokeWeight(4);
-  //head
-  stroke(0);
-
-  fill(200, 150, 150);
-  ellipse(gameChar_x, gameChar_y - 50, 35);
-  ellipse(gameChar_x, gameChar_y - 65, 3);
-  ellipse(gameChar_x + 3, gameChar_y - 65, 3);
-  ellipse(gameChar_x - 3, gameChar_y - 65, 3);
-
-  // face
-  fill(0);
-  rect(gameChar_x, gameChar_y - 50, 10, 1);
-
-  // body
-  fill(COLORS.character.body);
-  stroke(0);
-  rect(gameChar_x - 13, gameChar_y - 35, 26, 20);
-
-  //feet
-  fill(0);
-  rect(gameChar_x - 15, gameChar_y - 13, 10, 13); // left foot
-  rect(gameChar_x + 5, gameChar_y - 10, 8, 10); // right foot
-
-  // hands
-  fill(COLORS.character.hands);
-  rect(gameChar_x - 23, gameChar_y - 40, 10, 10);
-  rect(gameChar_x + 13, gameChar_y - 40, 10, 10);
-}
-
-function renderCharacterJumpLeft() {
-  strokeWeight(4);
-  //head
-  stroke(0);
-
-  fill(200, 150, 150);
-  ellipse(gameChar_x, gameChar_y - 50, 35);
-  ellipse(gameChar_x, gameChar_y - 65, 3);
-  ellipse(gameChar_x + 3, gameChar_y - 65, 3);
-  ellipse(gameChar_x - 3, gameChar_y - 65, 3);
-
-  // face
-  fill(0);
-  rect(gameChar_x - 10, gameChar_y - 50, 10, 1);
-
-  // body
-  fill(COLORS.character.body);
-  stroke(0);
-  rect(gameChar_x - 13, gameChar_y - 35, 26, 20);
-
-  //feet
-  fill(0);
-  rect(gameChar_x - 15, gameChar_y - 5, 10, 15); // left foot
-  rect(gameChar_x + 5, gameChar_y - 5, 10, 15); // right foot
-
-  // hands
-  fill(COLORS.character.hands);
-  rect(gameChar_x - 23, gameChar_y - 40, 10, 10);
-  rect(gameChar_x + 13, gameChar_y - 40, 10, 10);
-}
-
-function renderCharacterWalkRight() {
-  strokeWeight(4);
-  //head
-  stroke(0);
-
-  fill(200, 150, 150);
-  ellipse(gameChar_x, gameChar_y - 50, 35);
-  ellipse(gameChar_x, gameChar_y - 65, 3);
-  ellipse(gameChar_x + 3, gameChar_y - 65, 3);
-  ellipse(gameChar_x - 3, gameChar_y - 65, 3);
-
-  // face
-  fill(0);
-  rect(gameChar_x, gameChar_y - 50, 10, 1);
-
-  // body
-  fill(COLORS.character.body);
-  stroke(0);
-  rect(gameChar_x - 13, gameChar_y - 35, 26, 30);
-
-  //feet
-  fill(0);
-  rect(gameChar_x - 15, gameChar_y - 5, 10, 10); // left foot
-  rect(gameChar_x + 5, gameChar_y - 10, 10, 10); // right foot
-
-  // hands
-  fill(COLORS.character.hands);
-  rect(gameChar_x - 23, gameChar_y - 31, 10, 10);
-  rect(gameChar_x + 13, gameChar_y - 34, 10, 10);
-}
-
-function renderCharacterWalkLeft() {
-  strokeWeight(4);
-  //head
-  stroke(0);
-
-  fill(200, 150, 150);
-  ellipse(gameChar_x, gameChar_y - 50, 35);
-  ellipse(gameChar_x, gameChar_y - 65, 3);
-  ellipse(gameChar_x + 3, gameChar_y - 65, 3);
-  ellipse(gameChar_x - 3, gameChar_y - 65, 3);
-
-  // face
-  fill(0);
-  rect(gameChar_x - 10, gameChar_y - 50, 10, 1);
-
-  // body
-  fill(COLORS.character.body);
-  stroke(0);
-  rect(gameChar_x - 13, gameChar_y - 35, 26, 30);
-
-  //feet
-  fill(0);
-  rect(gameChar_x - 15, gameChar_y - 10, 10, 10);
-  rect(gameChar_x + 5, gameChar_y - 5, 10, 10);
-
-  // hands
-  fill(COLORS.character.hands);
-  rect(gameChar_x - 23, gameChar_y - 34, 10, 10);
-  rect(gameChar_x + 13, gameChar_y - 31, 10, 10);
 }
 
 function renderTree(xPos) {
@@ -383,16 +198,19 @@ function keyPressed() {
     case "over":
       console.log("inside over");
       if (keyCode === keyCodes.KEY_CODE_SPACE) {
+        playMusic();
         startGame();
       }
       break;
     case "startscreen":
       if (keyCode === keyCodes.KEY_CODE_ENTER) {
+        playMusic();
         startGame();
       }
       break;
     case "complete":
       if (keyCode === keyCodes.KEY_CODE_ENTER) {
+        playMusic();
         startGame();
       }
       break;
@@ -417,8 +235,8 @@ function checkCollectables() {
         collectables[i].x_pos,
         collectables[i].y_pos,
         character.world_x,
-        character.y
-      ) <= 50
+        character.y - 30
+      ) <= 60
     ) {
       if (collectables[i].isFound) {
         continue;
@@ -449,7 +267,6 @@ function renderFlagPole() {
 
 function startGame() {
   gameState = "play";
-  playMusic();
 
   treePos_y = 300;
   floorPos_x = 0;
@@ -472,7 +289,7 @@ function startGame() {
   character.resetDir();
 
   platforms = [];
-  platforms.push(createPlatform(150, floorPos_y - 100, 70));
+  platforms.push(createPlatform(150, floorPos_y - 100, 75));
   platforms.push(createPlatform(1000, floorPos_y - 105, 110));
   platforms.push(createPlatform(1200, floorPos_y - 140, 100, true));
   platforms.push(createPlatform(1100, floorPos_y - 200, 80));
@@ -486,6 +303,7 @@ function gameOver() {
   image(gameOverImg, 180, SIZES.canvasHeight / 3);
 
   text("press space to continue", SIZES.canvasWidth / 3, 400);
+  stopMusic();
 }
 
 function startScreen() {
@@ -567,6 +385,8 @@ function draw() {
 
     text("press enter to start again", SIZES.canvasWidth / 3, 400);
 
+    lives = NUMBERS.maxLives; // reset lives
+
     return;
   }
 
@@ -595,10 +415,10 @@ function draw() {
 
     if (gameScore === NUMBERS.maxScore && flagpole.isReached) {
       gameState = "complete";
+      stopMusic();
     }
 
-    tooFarLeft = gameChar_world_x <= SIZES.catPosX;
-    // TODO add ellipse
+    tooFarLeft = character.world_x <= SIZES.catPosX; // TODO: add ellipse
 
     character.checkPlatformContact();
 
@@ -652,25 +472,9 @@ function draw() {
     // draw game score
     fill(255);
     noStroke();
+    textSize(15);
     text("score " + gameScore, 30, 20);
 
     character.draw();
-
-    // render character in different states
-    // if (isLeft && isFalling) {
-    //   renderCharacterJumpLeft();
-    // } else if (isLeft && !isFalling) {
-    //   renderCharacterWalkLeft();
-    // } else if (isRight && isFalling) {
-    //   renderCharacterJumpRight();
-    // } else if (isRight && !isFalling) {
-    //   renderCharacterWalkRight();
-    // } else if (isFalling) {
-    //   renderCharacterJump();
-    // } else if (isPlummeting) {
-    //   renderCharacterJump();
-    // } else {
-    //   renderCharacterFront();
-    // }
   }
 }

@@ -1,8 +1,8 @@
 function createCloud() {
-  const size = random(0.8, 1.5);
-  const maxX = 2800;
+  const size = random(0.5, 1.5);
+  const maxX = 3000;
   return {
-    x: random(-10, 2600),
+    x: random(-30, 3000),
     y: random(50, 150),
     width: 70 * size,
     height: 50 * size,
