@@ -399,11 +399,7 @@ function keyPressed() {
       if (keyCode === keyCodes.KEY_CODE_RIGHT) {
         character.walkRight();
       }
-      if (
-        keyCode === keyCodes.KEY_CODE_SPACE &&
-        !character.isFalling &&
-        !character.isPlummeting
-      ) {
+      if (keyCode === keyCodes.KEY_CODE_SPACE) {
         character.jump();
       }
       break;
@@ -434,9 +430,6 @@ function keyReleased() {
   }
   if (keyCode === keyCodes.KEY_CODE_RIGHT) {
     character.front();
-  }
-  if (keyCode === keyCodes.KEY_CODE_SPACE) {
-    character.resetState();
   }
 }
 
@@ -506,8 +499,8 @@ function startGame() {
   // drop all the flags
 
   character.resetDir();
-  character.resetState();
 
+  platforms = [];
   platforms.push(createPlatform(150, floorPos_y - 100, 70));
   platforms.push(createPlatform(1000, floorPos_y - 105, 110));
   platforms.push(createPlatform(1200, floorPos_y - 140, 100, true));
