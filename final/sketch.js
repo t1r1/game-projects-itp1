@@ -4,10 +4,10 @@ let gameChar_world_x = 0;
 let treePos_y = 0;
 let floorPos_x = 0;
 let floorPos_y = 0;
-let cloud = {};
 let mountains = {};
 let gameScore = 0;
 let platforms = [];
+let clouds = [];
 let tooFarLeft = false;
 let character = null;
 
@@ -17,10 +17,6 @@ let lives = null;
 let gameState = "startscreen";
 
 let flagpole = {};
-
-const clouds = [];
-
-const cloudSpeed = [];
 
 const mountains_x = [300, 1500];
 const mountains_x_snow = [500, 1700];
@@ -61,11 +57,9 @@ function playMusic() {
 
 function setupClouds() {
   const numClouds = 5;
+  clouds = [];
   for (let i = 0; i < numClouds; i++) {
-    const xCord = random(10, 1000);
-    const speed = random(0.1, 1);
-    clouds.push(xCord);
-    cloudSpeed.push(speed);
+    clouds.push(createCloud());
   }
 }
 
@@ -294,22 +288,6 @@ function renderTree(xPos) {
   );
 }
 
-function renderCloud(xPos) {
-  noStroke();
-  fill(COLORS.cloud);
-
-  // a cloud
-  ellipse(xPos, cloud.y_pos - 3, cloud.width * 2, cloud.height + 20);
-  ellipse(xPos - 50, cloud.y_pos, cloud.width - 5, cloud.height - 10);
-  ellipse(xPos + 50, cloud.y_pos, cloud.width, cloud.height);
-
-  // the shadow
-  fill(255);
-  ellipse(xPos, cloud.y_pos, cloud.width + 50, cloud.height + 26);
-  ellipse(xPos - 50, cloud.y_pos, cloud.width - 10, cloud.height - 15);
-  ellipse(xPos + 50, cloud.y_pos, cloud.width, cloud.height);
-}
-
 function drawCanyon(t_canyon) {
   fill(COLORS.sky);
   rect(t_canyon.x_pos, floorPos_y, t_canyon.width, t_canyon.width + 30);
@@ -383,10 +361,9 @@ function drawMountains() {
   }
 }
 
-function drawClouds(clouds) {
+function drawClouds() {
   for (let i = 0; i < clouds.length; i++) {
-    clouds[i] += cloudSpeed[i];
-    renderCloud(clouds[i]);
+    clouds[i].draw();
   }
 }
 
@@ -477,12 +454,6 @@ function startGame() {
   treePos_y = 300;
   floorPos_x = 0;
   character = createCharacter(90, floorPos_y); // initialize a character with start x and y coordinates
-
-  cloud = {
-    y_pos: 100,
-    width: 70,
-    height: 50,
-  };
 
   mountains = {
     snow_x_pos: 500,
@@ -637,7 +608,7 @@ function draw() {
     character.updateWorldX();
 
     drawMountains();
-    drawClouds(clouds);
+    drawClouds();
     drawTrees();
 
     for (let i = 0; i < platforms.length; i++) {

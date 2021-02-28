@@ -124,7 +124,9 @@ function createCharacter(x, y) {
       }
     },
     jump: function () {
-      this.y -= SIZES.jumpElevation;
+      if (!this.isFalling && !this.isPlummeting) {
+        this.y -= SIZES.jumpElevation;
+      }
     },
     fall: function () {
       this.isFalling = true;
