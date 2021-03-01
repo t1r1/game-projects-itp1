@@ -5,7 +5,7 @@ let mountains = {};
 let gameScore = 0;
 let platforms = [];
 let clouds = [];
-let tooFarLeft = false;
+let tooFarLeft = false; // TODO
 let character = null;
 
 let lives = null;
