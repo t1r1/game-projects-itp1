@@ -22,12 +22,14 @@ const COLORS = {
   },
   collectable: {
     inner: [250, 237, 54],
-    outer: [226, 184, 54]
+    outer: [226, 184, 54],
   },
   startScreen: [0, 0, 0],
   startScreentext: [0, 0, 0],
   platform: [200, 145, 92],
   moon: [230, 230, 180],
+  catBubble: [242, 212, 75],
+  black: [0, 0, 0],
 };
 
 const SIZES = {

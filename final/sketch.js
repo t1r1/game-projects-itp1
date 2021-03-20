@@ -64,10 +64,10 @@ function preload() {
   collectableSound = loadSound("assets/sound/coin.mp3");
   gameOverSound = loadSound("assets/sound/24_release.mp3");
 
-  gameSound.setVolume(0.3);
+  gameSound.setVolume(0.4);
   jumpSound.setVolume(0.1);
   fallSound.setVolume(0.1);
-  collectableSound.setVolume(0.2);
+  collectableSound.setVolume(0.1);
   gameOverSound.setVolume(0.3);
 }
 
@@ -89,7 +89,7 @@ function setupClouds() {
 
 function setupCollectables() {
   for (let i = 0; i < collectables.length; i++) {
-    const coin = collectables[i]
+    const coin = collectables[i];
     coins.push(createCollectable(coin.x_pos, coin.y_pos, coin.size));
   }
 }
@@ -197,10 +197,15 @@ function drawClouds() {
   }
 }
 
-function drawCoins() {
-  for (let i = 0; i < collectables.length; i++) {
-    collectables[i].draw();
-  }
+function drawCatBubble() {
+  // draw a bubble
+  fill(COLORS.catBubble);
+  ellipse(SIZES.catPosX - 30, SIZES.catPosY - 10, 140, 60);
+  triangle(-1, 375, -10, 375, -1, 385);
+  // draw a text inside the bubble
+  fill(COLORS.black);
+  textFont("Helvetica", 12);
+  text("You Shall Not Pass", SIZES.catPosX - 30, SIZES.catPosY - 5);
 }
 
 function keyPressed() {
@@ -435,19 +440,14 @@ function draw() {
     fill("Salmon");
     textSize(16);
     textAlign(CENTER);
-    text("(" + floor(mouseX - character.scrollPos) + ", " + floor(mouseY) + ")", mouseX, mouseY);
+    text(
+      "(" + floor(mouseX - character.scrollPos) + ", " + floor(mouseY) + ")",
+      mouseX,
+      mouseY
+    );
 
     if (tooFarLeft) {
-      fill(COLORS.moon);
-      ellipse(SIZES.catPosX - 30, SIZES.catPosY - 10, 140, 60);
-      fill(COLORS.moon);
-      triangle(
-          -1, 375,
-          -10, 375,
-          -1, 385)
-      fill(0, 0, 0)
-      textFont('Helvetica', 12)
-      text("You Shall Not Pass", SIZES.catPosX - 30, SIZES.catPosY - 5);
+      drawCatBubble();
     }
 
     for (let i = 0; i < platforms.length; i++) {
@@ -458,7 +458,7 @@ function draw() {
     for (let i = 0; i < coins.length; i++) {
       if (!coins[i].isFound) {
         coins[i].draw();
-        coins[i].checkContact()
+        coins[i].checkContact();
       }
     }
 
