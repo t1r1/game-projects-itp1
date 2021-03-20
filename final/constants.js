@@ -26,7 +26,7 @@ const COLORS = {
   },
   startScreen: [0, 0, 0],
   startScreentext: [0, 0, 0],
-  platform: [200, 145, 92],
+  platform: [180, 178, 181],
   moon: [230, 230, 180],
   catBubble: [242, 212, 75],
   black: [0, 0, 0],

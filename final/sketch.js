@@ -8,7 +8,6 @@ let clouds = [];
 let coins = [];
 let tooFarLeft = false; // TODO
 let character = null;
-
 let lives = null;
 
 // initial game state. other possible variants: 'over', 'play', 'complete'
@@ -41,7 +40,6 @@ const stars = [];
 
 let cat;
 let liveIcon;
-let gameOverImg;
 let completeLevelImg;
 let gameSound;
 let jumpSound;
@@ -53,7 +51,6 @@ function preload() {
   // loading pictures
   cat = loadImage("assets/cat_face.png");
   liveIcon = loadImage("assets/heart_full.svg");
-  gameOverImg = loadImage("assets/gameover.png");
   completeLevelImg = loadImage("assets/complete.png");
 
   //loading sounds, setting volume
@@ -222,7 +219,6 @@ function keyPressed() {
       }
       break;
     case "over":
-      console.log("inside over");
       if (keyCode === keyCodes.KEY_CODE_SPACE) {
         playMusic();
         startGame();
@@ -307,12 +303,16 @@ function startGame() {
 
 function gameOver() {
   noStroke();
-  fill(COLORS.flagPoleFlag);
-  textStyle(BOLD);
-  textSize(20);
-  image(gameOverImg, 180, SIZES.canvasHeight / 3);
+  fill(255, 255, 255);
 
-  text("press space to continue", SIZES.canvasWidth / 3, 400);
+  textStyle(BOLD);
+  textSize(60);
+  stroke(0, 0, 0);
+  text("GAME OVER", SIZES.canvasWidth / 3, SIZES.canvasHeight / 2 - 30);
+  textSize(20);
+  // image(gameOverImg, 180, SIZES.canvasHeight / 3);
+  text("press space to continue", SIZES.canvasWidth / 2, 300);
+
   stopMusic();
 }
 
@@ -323,9 +323,9 @@ function startScreen() {
   noStroke();
   fill(255, 255, 255);
   textStyle(BOLD);
-  textSize(20);
+  textSize(30);
 
-  text("press ENTER to start the game", SIZES.canvasWidth / 3, 200);
+  text("press ENTER to start ", SIZES.canvasWidth / 3, 200);
   textSize(13);
   text("Music & sound by Pavel Vorobyov (Slighly Magic)", 650, 550);
   text("Game design & development by Maria Vorobyeva", 650, 530);
@@ -467,14 +467,15 @@ function draw() {
       drawCanyon(canyons[i]);
     }
 
+    // constantly checking:
+    // whether a player fell down inside a canyon,
     character.checkInsideCanyons();
-
+    // whether a player is still alive,
     character.checkPlayerDie();
-
+    // whether the flagpole is reached to draw it in a proper state.
     if (!flagpole.isReached) {
       character.checkFlagPole();
     }
-
     // render the black cat
     image(cat, SIZES.catPosX, SIZES.catPosY);
 

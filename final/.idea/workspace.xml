@@ -2,10 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="25ba9e7a-63ab-4453-bc29-0611706a8743" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/gameover.gif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/gameover.png" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/constants.js" beforeDir="false" afterPath="$PROJECT_DIR$/constants.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/p5.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/p5.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/platform.js" beforeDir="false" afterPath="$PROJECT_DIR$/platform.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/sketch.js" beforeDir="false" afterPath="$PROJECT_DIR$/sketch.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -64,7 +65,7 @@
       <workItem from="1613844072983" duration="4869000" />
       <workItem from="1613850725475" duration="2573000" />
       <workItem from="1613926078759" duration="9820000" />
-      <workItem from="1616245333355" duration="9520000" />
+      <workItem from="1616245333355" duration="12170000" />
     </task>
     <servers />
   </component>
