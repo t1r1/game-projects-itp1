@@ -31,7 +31,7 @@ function createRandomStar(canvasWidth, canvasHeight) {
         }
       }
 
-      let vectors = [
+      const vectors = [
         createVector(1, 0),
         createVector(0, -1),
         createVector(-1, 0),

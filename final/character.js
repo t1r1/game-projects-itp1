@@ -86,6 +86,7 @@ function createCharacter(x, y) {
           this.y === floorPos_y
         ) {
           this.isInsideCanyon = true;
+          fallSound.play()
           break;
         }
       }
@@ -127,6 +128,7 @@ function createCharacter(x, y) {
     },
     jump: function () {
       if (!this.isFalling && !this.isPlummeting) {
+        jumpSound.play();
         this.y -= SIZES.jumpElevation;
       }
     },

@@ -5,6 +5,7 @@ let mountains = {};
 let gameScore = 0;
 let platforms = [];
 let clouds = [];
+let coins = [];
 let tooFarLeft = false; // TODO
 let character = null;
 
@@ -43,6 +44,10 @@ let liveIcon;
 let gameOverImg;
 let completeLevelImg;
 let gameSound;
+let jumpSound;
+let fallSound;
+let collectableSound;
+let gameOverSound;
 
 function preload() {
   // loading pictures
@@ -51,10 +56,19 @@ function preload() {
   gameOverImg = loadImage("assets/gameover.png");
   completeLevelImg = loadImage("assets/complete.png");
 
-  //loading sounds
+  //loading sounds, setting volume
   soundFormats("mp3", "wav");
-  gameSound = loadSound("assets/dream98.mp3");
+  gameSound = loadSound("assets/sound/dream98.mp3");
+  jumpSound = loadSound("assets/sound/jump.mp3");
+  fallSound = loadSound("assets/sound/fall.mp3");
+  collectableSound = loadSound("assets/sound/coin.mp3");
+  gameOverSound = loadSound("assets/sound/24_release.mp3");
+
   gameSound.setVolume(0.3);
+  jumpSound.setVolume(0.1);
+  fallSound.setVolume(0.1);
+  collectableSound.setVolume(0.2);
+  gameOverSound.setVolume(0.3);
 }
 
 function playMusic() {
@@ -70,6 +84,13 @@ function setupClouds() {
   clouds = [];
   for (let i = 0; i < numClouds; i++) {
     clouds.push(createCloud());
+  }
+}
+
+function setupCollectables() {
+  for (let i = 0; i < collectables.length; i++) {
+    const coin = collectables[i]
+    coins.push(createCollectable(coin.x_pos, coin.y_pos, coin.size));
   }
 }
 
@@ -130,32 +151,6 @@ function drawCanyon(t_canyon) {
   rect(t_canyon.x_pos, 530, 120, 130);
 }
 
-function drawCollectable(t_collectable) {
-  fill(226, 184, 54);
-  ellipse(
-    t_collectable.x_pos - 5,
-    t_collectable.y_pos,
-    t_collectable.size - 10,
-    t_collectable.size
-  ); // coin edge
-
-  fill(250, 237, 54);
-  ellipse(
-    t_collectable.x_pos,
-    t_collectable.y_pos,
-    t_collectable.size - 10,
-    t_collectable.size
-  );
-  textSize(30);
-
-  textFont("Georgia");
-
-  fill(186, 144, 14); // text shadow
-  text("$", t_collectable.x_pos - 8, t_collectable.y_pos + 10);
-  fill(250, 237, 54);
-  text("$", t_collectable.x_pos - 10, t_collectable.y_pos + 10);
-}
-
 function drawTrees() {
   for (let i = 0; i < trees_x.length; i++) {
     renderTree(trees_x[i]);
@@ -199,6 +194,12 @@ function drawMountains() {
 function drawClouds() {
   for (let i = 0; i < clouds.length; i++) {
     clouds[i].draw();
+  }
+}
+
+function drawCoins() {
+  for (let i = 0; i < collectables.length; i++) {
+    collectables[i].draw();
   }
 }
 
@@ -248,26 +249,6 @@ function keyReleased() {
   }
 }
 
-function checkCollectables() {
-  for (let i = 0; i < collectables.length; i++) {
-    if (
-      dist(
-        collectables[i].x_pos,
-        collectables[i].y_pos,
-        character.world_x,
-        character.y - 30
-      ) <= 60
-    ) {
-      if (collectables[i].isFound) {
-        continue;
-      }
-      collectables[i].isFound = true;
-      gameScore += 1;
-      break;
-    }
-  }
-}
-
 function renderFlagPole() {
   push();
   strokeWeight(5);
@@ -286,7 +267,9 @@ function renderFlagPole() {
 }
 
 function startGame() {
+  gameScore = 0;
   gameState = "play";
+  gameOverSound.stop();
 
   treePos_y = 300;
   floorPos_x = 0;
@@ -304,9 +287,7 @@ function startGame() {
     x_pos: 2600,
   };
 
-  // drop all the flags
-
-  character.resetDir();
+  character.resetDir(); // reset character's direction
 
   platforms = [];
   platforms.push(createPlatform(150, floorPos_y - 100, 75));
@@ -314,6 +295,9 @@ function startGame() {
   platforms.push(createPlatform(1200, floorPos_y - 140, 100, true));
   platforms.push(createPlatform(1100, floorPos_y - 200, 80));
   platforms.push(createPlatform(1400, floorPos_y - 250, 100));
+
+  coins = [];
+  setupCollectables();
 }
 
 function gameOver() {
@@ -340,16 +324,6 @@ function startScreen() {
   textSize(13);
   text("Music & sound by Pavel Vorobyov (Slighly Magic)", 650, 550);
   text("Game design & development by Maria Vorobyeva", 650, 530);
-}
-
-function renderStars() {
-  for (let i = 0; i < 5; i++) {
-    const x = random(0, 1000);
-    const y = random(0, 1000);
-    stroke(210, 224, 233); // Change the color
-    strokeWeight(1);
-    point(x, y);
-  }
 }
 
 function renderMoon() {
@@ -414,6 +388,11 @@ function draw() {
   if (gameState === "over") {
     gameOver();
     lives = NUMBERS.maxLives; // reset lives
+
+    if (!gameOverSound.isPlaying()) {
+      gameOverSound.loop();
+    }
+
     return;
   }
 
@@ -458,6 +437,13 @@ function draw() {
       platforms[i].move();
     }
 
+    for (let i = 0; i < coins.length; i++) {
+      if (!coins[i].isFound) {
+        coins[i].draw();
+        coins[i].checkContact()
+      }
+    }
+
     //draw canyons
     for (let i = 0; i < canyons.length; i++) {
       drawCanyon(canyons[i]);
@@ -470,15 +456,6 @@ function draw() {
     if (!flagpole.isReached) {
       character.checkFlagPole();
     }
-
-    //draw collectables
-    for (let i = 0; i < collectables.length; i++) {
-      if (!collectables[i].isFound) {
-        drawCollectable(collectables[i]);
-      }
-    }
-
-    checkCollectables();
 
     // render the black cat
     image(cat, SIZES.catPosX, SIZES.catPosY);

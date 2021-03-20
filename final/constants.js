@@ -20,6 +20,10 @@ const COLORS = {
     hands: [200, 150, 150],
     hair: [219, 218, 158],
   },
+  collectable: {
+    inner: [250, 237, 54],
+    outer: [226, 184, 54]
+  },
   startScreen: [0, 0, 0],
   startScreentext: [0, 0, 0],
   platform: [200, 145, 92],
