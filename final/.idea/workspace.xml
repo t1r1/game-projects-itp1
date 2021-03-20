@@ -2,19 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="25ba9e7a-63ab-4453-bc29-0611706a8743" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/assets/sound/coin.mp3" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/sound/fall.mp3" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/sound/jump.mp3" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/collectable.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ladder.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/24_release.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/assets/sound/24_release.mp3" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/dream98.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/assets/sound/dream98.mp3" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/character.js" beforeDir="false" afterPath="$PROJECT_DIR$/character.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/collectable.js" beforeDir="false" afterPath="$PROJECT_DIR$/collectable.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/constants.js" beforeDir="false" afterPath="$PROJECT_DIR$/constants.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/sketch.js" beforeDir="false" afterPath="$PROJECT_DIR$/sketch.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/stars.js" beforeDir="false" afterPath="$PROJECT_DIR$/stars.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -72,7 +64,7 @@
       <workItem from="1613844072983" duration="4869000" />
       <workItem from="1613850725475" duration="2573000" />
       <workItem from="1613926078759" duration="9820000" />
-      <workItem from="1616245333355" duration="6481000" />
+      <workItem from="1616245333355" duration="8788000" />
     </task>
     <servers />
   </component>

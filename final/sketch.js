@@ -418,7 +418,7 @@ function draw() {
       stopMusic();
     }
 
-    tooFarLeft = character.world_x <= SIZES.catPosX; // TODO: add ellipse
+    tooFarLeft = character.world_x <= SIZES.catPosX - 100; // TODO: add ellipse
 
     character.checkPlatformContact();
 
@@ -431,6 +431,24 @@ function draw() {
     drawClouds();
     drawTrees();
     drawLadder();
+
+    fill("Salmon");
+    textSize(16);
+    textAlign(CENTER);
+    text("(" + floor(mouseX - character.scrollPos) + ", " + floor(mouseY) + ")", mouseX, mouseY);
+
+    if (tooFarLeft) {
+      fill(COLORS.moon);
+      ellipse(SIZES.catPosX - 30, SIZES.catPosY - 10, 140, 60);
+      fill(COLORS.moon);
+      triangle(
+          -1, 375,
+          -10, 375,
+          -1, 385)
+      fill(0, 0, 0)
+      textFont('Helvetica', 12)
+      text("You Shall Not Pass", SIZES.catPosX - 30, SIZES.catPosY - 5);
+    }
 
     for (let i = 0; i < platforms.length; i++) {
       platforms[i].draw();

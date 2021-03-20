@@ -43,12 +43,12 @@ const SIZES = {
 const trees_x = [-300, 40, 600, 800, 1370, 2000, 2400, 2700, 3000, 3400];
 
 const collectables = [
-  { x_pos: 200, isFound: false, y_pos: 230, size: 50 },
-  { x_pos: 700, isFound: false, y_pos: 240, size: 50 },
-  { x_pos: 1250, isFound: false, y_pos: 210, size: 50 },
-  { x_pos: 1050, isFound: false, y_pos: 290, size: 50 },
-  { x_pos: 2250, isFound: false, y_pos: 290, size: 50 },
-  { x_pos: 1420, isFound: false, y_pos: 115, size: 50 },
+  { x_pos: 200, y_pos: 230, size: 50 },
+  { x_pos: 700, y_pos: 240, size: 50 },
+  { x_pos: 1250, y_pos: 210, size: 50 },
+  { x_pos: 1050, y_pos: 290, size: 50 },
+  { x_pos: 2250, y_pos: 290, size: 50 },
+  { x_pos: 1420, y_pos: 115, size: 50 },
 ];
 
 const NUMBERS = {

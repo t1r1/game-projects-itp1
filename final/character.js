@@ -14,6 +14,9 @@ function createCharacter(x, y) {
     updateScrollPos: function () {
       translate(this.scrollPos, 0);
     },
+    stop: function() {
+      this.x = 0
+    },
     move: function () {
       if (this.isFalling) {
         this.y += 3;
@@ -32,10 +35,13 @@ function createCharacter(x, y) {
       }
 
       if (this.direction === "left") {
-        if (this.x > width * 0.2) {
-          this.x -= 5;
-        } else {
-          this.scrollPos += 5;
+        const tooFarLeft = character.world_x <= SIZES.catPosX - 200; //
+        if (!tooFarLeft) {
+          if (this.x > width * 0.2) {
+            this.x -= 5;
+          } else {
+            this.scrollPos += 5;
+          }
         }
       }
 

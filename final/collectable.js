@@ -48,9 +48,9 @@ function createCollectable(x_pos, y_pos, size) {
             textFont("Georgia");
 
             fill(186, 144, 14); // text ($) shadow
-            text("$", this.x - 8, this.y + 10);
+            text("$", this.x, this.y + 10);
             fill(250, 237, 54);
-            text("$", this.x - 10, this.y + 10);
+            text("$", this.x - 2, this.y + 10);
         }
     }
 }
