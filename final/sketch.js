@@ -449,7 +449,7 @@ function draw() {
       stopMusic();
     }
 
-    tooFarLeft = character.world_x <= SIZES.catPosX - 100; // TODO: add ellipse
+    tooFarLeft = character.world_x <= SIZES.catPosX - 100; // prevents character from going too far left with a cute bubble
 
     character.checkPlatformContact();
 
@@ -463,6 +463,7 @@ function draw() {
     drawTrees();
     drawLadder();
 
+    // DEBUG
     fill("Salmon");
     textSize(16);
     textAlign(CENTER);
@@ -471,6 +472,8 @@ function draw() {
       mouseX,
       mouseY
     );
+
+    //DEBUG
 
     if (tooFarLeft) {
       drawCatBubble();
