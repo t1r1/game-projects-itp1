@@ -140,7 +140,7 @@ function createCharacter(x, y) {
         }
       }
 
-      if (this.y > SIZES.canvasHeight || hasContactWithEnemy) {
+      if (this.y > SIZES.canvasHeight) {
         lives -= 1;
         if (lives > 0) {
           startGame();

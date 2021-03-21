@@ -301,7 +301,7 @@ function startGame() {
   platforms = [];
   platforms.push(createPlatform(150, floorPos_y - 100, 75));
   platforms.push(createPlatform(1000, floorPos_y - 105, 110));
-  platforms.push(createPlatform(1200, floorPos_y - 140, 100, true));
+  platforms.push(createPlatform(1200, floorPos_y - 150, 100, true));
   platforms.push(createPlatform(1100, floorPos_y - 200, 80));
   platforms.push(createPlatform(1400, floorPos_y - 250, 100));
 

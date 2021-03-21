@@ -52,6 +52,7 @@ const collectablesCoords = [
   { x_pos: 1050, y_pos: 290, size: 50 },
   { x_pos: 2250, y_pos: 290, size: 50 },
   { x_pos: 1420, y_pos: 115, size: 50 },
+  { x_pos: 1653, y_pos: 198, size: 50 },
 ];
 
 const enemiesCoords = [
