@@ -19,7 +19,7 @@ function createCharacter(x, y) {
     },
     move: function () {
       if (this.isFalling) {
-        this.y += 3;
+        this.y += 3.5; // gravity
         if (!this.isPlummeting && this.y > floorPos_y) {
           this.y = floorPos_y;
           this.isFalling = false;
@@ -28,9 +28,9 @@ function createCharacter(x, y) {
 
       if (this.direction === "right") {
         if (this.x < width * 0.8) {
-          this.x += 5;
+          this.x += 4;
         } else {
-          this.scrollPos -= 5;
+          this.scrollPos -= 4;
         }
       }
 

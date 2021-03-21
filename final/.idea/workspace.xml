@@ -2,13 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="25ba9e7a-63ab-4453-bc29-0611706a8743" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/enemy.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/character.js" beforeDir="false" afterPath="$PROJECT_DIR$/character.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/collectable.js" beforeDir="false" afterPath="$PROJECT_DIR$/collectable.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/constants.js" beforeDir="false" afterPath="$PROJECT_DIR$/constants.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sketch.js" beforeDir="false" afterPath="$PROJECT_DIR$/sketch.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/enemy.js" beforeDir="false" afterPath="$PROJECT_DIR$/enemy.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/req_checklist.MD" beforeDir="false" afterPath="$PROJECT_DIR$/req_checklist.MD" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

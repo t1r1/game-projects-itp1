@@ -1,6 +1,6 @@
 function createEnemy(x, y, isMoving) {
   const enemySize = 50;
-  const movingDistance = random(40, 70);
+  const movingDistance = random(40, 60);
   return {
     x,
     y,
