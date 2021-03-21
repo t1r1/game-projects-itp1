@@ -14,8 +14,8 @@ function createCharacter(x, y) {
     updateScrollPos: function () {
       translate(this.scrollPos, 0);
     },
-    stop: function() {
-      this.x = 0
+    stop: function () {
+      this.x = 0;
     },
     move: function () {
       if (this.isFalling) {
@@ -92,7 +92,7 @@ function createCharacter(x, y) {
           this.y === floorPos_y
         ) {
           this.isInsideCanyon = true;
-          fallSound.play()
+          fallSound.play();
           break;
         }
       }
@@ -125,7 +125,22 @@ function createCharacter(x, y) {
       }
     },
     checkPlayerDie: function () {
-      if (this.y > SIZES.canvasHeight) {
+      let hasContactWithEnemy = false;
+
+      for (let i = 0; i < enemies.length; i++) {
+        if (enemies[i].checkContact(this.world_x, this.y)) {
+          hasContactWithEnemy = true;
+          break;
+        }
+      }
+
+      if (hasContactWithEnemy) {
+        if (!fallSound.isPlaying()) {
+          fallSound.play();
+        }
+      }
+
+      if (this.y > SIZES.canvasHeight || hasContactWithEnemy) {
         lives -= 1;
         if (lives > 0) {
           startGame();

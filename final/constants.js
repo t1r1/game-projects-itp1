@@ -30,6 +30,7 @@ const COLORS = {
   moon: [230, 230, 180],
   catBubble: [242, 212, 75],
   black: [0, 0, 0],
+  enemy: [247, 239, 231],
 };
 
 const SIZES = {
@@ -44,7 +45,7 @@ const SIZES = {
 
 const trees_x = [-300, 40, 600, 800, 1370, 2000, 2400, 2700, 3000, 3400];
 
-const collectables = [
+const collectablesCoords = [
   { x_pos: 200, y_pos: 230, size: 50 },
   { x_pos: 700, y_pos: 240, size: 50 },
   { x_pos: 1250, y_pos: 210, size: 50 },
@@ -53,8 +54,14 @@ const collectables = [
   { x_pos: 1420, y_pos: 115, size: 50 },
 ];
 
+const enemiesCoords = [
+  { x_pos: 365, y_pos: 400 },
+  { x_pos: 800, y_pos: 400 },
+  { x_pos: 1405, y_pos: 400 },
+];
+
 const NUMBERS = {
   maxLives: 3,
   minLives: 1,
-  maxScore: collectables.length,
+  maxScore: collectablesCoords.length,
 };

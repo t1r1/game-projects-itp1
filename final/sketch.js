@@ -6,6 +6,7 @@ let gameScore = 0;
 let platforms = [];
 let clouds = [];
 let coins = [];
+let enemies = [];
 let tooFarLeft = false; // TODO
 let character = null;
 let lives = null;
@@ -85,9 +86,16 @@ function setupClouds() {
 }
 
 function setupCollectables() {
-  for (let i = 0; i < collectables.length; i++) {
-    const coin = collectables[i];
+  for (let i = 0; i < collectablesCoords.length; i++) {
+    const coin = collectablesCoords[i];
     coins.push(createCollectable(coin.x_pos, coin.y_pos, coin.size));
+  }
+}
+
+function setupEnemies() {
+  for (let i = 0; i < enemiesCoords.length; i++) {
+    const enemy = enemiesCoords[i];
+    enemies.push(createEnemy(enemy.x_pos, enemy.y_pos, true));
   }
 }
 
@@ -132,7 +140,7 @@ function renderTree(xPos) {
 }
 
 function drawLadder() {
-  fill(COLORS.treeCrown);
+  fill([70, 74, 77]);
   rect(
     ladder.firstLevel.xPos,
     ladder.firstLevel.yPos,
@@ -285,7 +293,7 @@ function startGame() {
 
   flagpole = {
     isReached: false,
-    x_pos: 2600,
+    x_pos: 3600,
   };
 
   character.resetDir(); // reset character's direction
@@ -298,7 +306,9 @@ function startGame() {
   platforms.push(createPlatform(1400, floorPos_y - 250, 100));
 
   coins = [];
+  enemies = [];
   setupCollectables();
+  setupEnemies();
 }
 
 function gameOver() {
@@ -361,6 +371,22 @@ function renderGround() {
   strokeWeight(14);
   for (let i = 0; i < 800; i++) {
     point(floorPos_x + i * 10, SIZES.canvasHeight - 30);
+  }
+  pop();
+
+  push();
+  stroke(40, 131, 84);
+  strokeWeight(50);
+  for (let i = 0; i < 800; i++) {
+    point(floorPos_x + i * 10, SIZES.canvasHeight - 60);
+  }
+  pop();
+
+  push();
+  stroke(41, 124, 81);
+  strokeWeight(50);
+  for (let i = 0; i < 800; i++) {
+    point(floorPos_x + i * 10, SIZES.canvasHeight - 80);
   }
   pop();
 }
@@ -462,6 +488,12 @@ function draw() {
       }
     }
 
+    for (let i = 0; i < enemies.length; i++) {
+      enemies[i].draw();
+      enemies[i].move();
+      enemies[i].checkContact(character.world_x, character.y);
+    }
+
     //draw canyons
     for (let i = 0; i < canyons.length; i++) {
       drawCanyon(canyons[i]);
@@ -470,7 +502,7 @@ function draw() {
     // constantly checking:
     // whether a player fell down inside a canyon,
     character.checkInsideCanyons();
-    // whether a player is still alive,
+    // whether a player is still alive (not in canyon or not in contact with enemy)
     character.checkPlayerDie();
     // whether the flagpole is reached to draw it in a proper state.
     if (!flagpole.isReached) {
