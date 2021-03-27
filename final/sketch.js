@@ -18,15 +18,6 @@ let flagpole = {};
 
 const mountains_x = [300, 1500];
 const mountains_x_snow = [500, 1700];
-const canyons = [
-  {
-    x_pos: 120,
-    width: 120,
-    depth: 120,
-    isCharacterInside: false,
-  },
-  { x_pos: 1000, width: 120, depth: 120, isCharacterInside: false },
-];
 
 const ladder = {
   firstLevel: {
@@ -70,7 +61,7 @@ function preload() {
 }
 
 function playMusic() {
-  gameSound.loop();
+  // gameSound.loop();
 }
 
 function stopMusic() {
@@ -108,7 +99,7 @@ function setupStars() {
 
 function setup() {
   createCanvas(SIZES.canvasWidth, SIZES.canvasHeight);
-  floorPos_y = 432;
+  floorPos_y = LOCATIONS.floorPosY;
   ladder.firstLevel.yPos = 333;
   lives = NUMBERS.maxLives;
   gameScore = 0;
@@ -205,12 +196,12 @@ function drawClouds() {
 function drawCatBubble() {
   // draw a bubble
   fill(COLORS.catBubble);
-  ellipse(SIZES.catPosX - 30, SIZES.catPosY - 10, 140, 60);
+  ellipse(LOCATIONS.catPosX - 30, LOCATIONS.catPosY - 10, 140, 60);
   triangle(-1, 375, -10, 375, -1, 385);
   // draw a text inside the bubble
   fill(COLORS.black);
   textFont("Helvetica", 12);
-  text("You Shall Not Pass", SIZES.catPosX - 30, SIZES.catPosY - 5);
+  text("You Shall Not Pass", LOCATIONS.catPosX - 30, LOCATIONS.catPosY - 5);
 }
 
 function keyPressed() {
@@ -267,9 +258,9 @@ function renderFlagPole() {
   fill(COLORS.flagPoleFlag);
 
   if (flagpole.isReached) {
-    rect(flagpole.x_pos, floorPos_y - 250, 50, 50);
-  } else {
     rect(flagpole.x_pos, floorPos_y - 50, 50, 50);
+  } else {
+    rect(flagpole.x_pos, floorPos_y - 250, 50, 50);
   }
 
   pop(); // cancel stroke weight at the end
@@ -293,17 +284,28 @@ function startGame() {
 
   flagpole = {
     isReached: false,
-    x_pos: 3600,
+    x_pos: LOCATIONS.flagpoleX,
   };
 
   character.resetDir(); // reset character's direction
 
   platforms = [];
-  platforms.push(createPlatform(150, floorPos_y - 100, 75));
-  platforms.push(createPlatform(1000, floorPos_y - 105, 110));
-  platforms.push(createPlatform(1200, floorPos_y - 150, 100, true));
-  platforms.push(createPlatform(1100, floorPos_y - 200, 80));
-  platforms.push(createPlatform(1400, floorPos_y - 250, 100));
+
+  for (let p = 0; p < platformsCoords.length; p++) {
+    platforms.push(
+      createPlatform(
+        platformsCoords[p].x_pos,
+        platformsCoords[p].y_pos,
+        platformsCoords[p].length,
+        platformsCoords[p].isMoving
+      )
+    );
+  }
+  // platforms.push(createPlatform(150, floorPos_y - 100, 75));
+  // platforms.push(createPlatform(1000, floorPos_y - 105, 110));
+  // platforms.push(createPlatform(1200, floorPos_y - 150, 100, true));
+  // platforms.push(createPlatform(1100, floorPos_y - 200, 80));
+  // platforms.push(createPlatform(1400, floorPos_y - 250, 100));
 
   coins = [];
   enemies = [];
@@ -409,7 +411,8 @@ function draw() {
     textStyle(BOLD);
     textSize(20);
 
-    text("press enter to start again", SIZES.canvasWidth / 3, 400);
+    text("press enter to start again", SIZES.canvasWidth / 3, 500);
+    text(`your score is ${gameScore}`, SIZES.canvasWidth / 3, 400);
 
     lives = NUMBERS.maxLives; // reset lives
 
@@ -428,6 +431,7 @@ function draw() {
   }
 
   if (gameState === "play") {
+    console.log(character.x, character.world_x);
     if (lives < 1) {
       gameState = "over";
       gameScore = 0;
@@ -442,16 +446,15 @@ function draw() {
     renderMoon();
     renderGround();
 
-    character.checkIsPlummeting();
-
-    if (gameScore === NUMBERS.maxScore && flagpole.isReached) {
+    if (flagpole.isReached) {
       gameState = "complete";
       stopMusic();
     }
 
-    tooFarLeft = character.world_x <= SIZES.catPosX - 100; // prevents character from going too far left with a cute bubble
+    tooFarLeft = character.world_x <= LOCATIONS.catPosX - 100; // prevents character from going too far left with a cute bubble
 
     character.checkPlatformContact();
+    character.checkIsPlummeting();
 
     push();
 
@@ -462,18 +465,6 @@ function draw() {
     drawClouds();
     drawTrees();
     drawLadder();
-
-    // DEBUG
-    fill("Salmon");
-    textSize(16);
-    textAlign(CENTER);
-    text(
-      "(" + floor(mouseX - character.scrollPos) + ", " + floor(mouseY) + ")",
-      mouseX,
-      mouseY
-    );
-
-    //DEBUG
 
     if (tooFarLeft) {
       drawCatBubble();
@@ -512,9 +503,10 @@ function draw() {
       character.checkFlagPole();
     }
     // render the black cat
-    image(cat, SIZES.catPosX, SIZES.catPosY);
+    image(cat, LOCATIONS.catPosX, LOCATIONS.catPosY);
 
     renderFlagPole();
+
     pop();
 
     // draw lives icons
@@ -529,5 +521,17 @@ function draw() {
     text("score " + gameScore, 30, 20);
 
     character.draw();
+
+    // DEBUG
+    fill("Salmon");
+    textSize(16);
+    textAlign(CENTER);
+    text(
+      "(" + floor(mouseX - character.scrollPos) + ", " + floor(mouseY) + ")",
+      mouseX,
+      mouseY
+    );
+
+    //DEBUG
   }
 }

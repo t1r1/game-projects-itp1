@@ -39,6 +39,11 @@ const SIZES = {
   characterBody: 35,
   platform: 10,
   jumpElevation: 150,
+};
+
+const LOCATIONS = {
+  flagpoleX: 4000,
+  floorPosY: 432,
   catPosX: -10,
   catPosY: 360,
 };
@@ -53,12 +58,31 @@ const collectablesCoords = [
   { x_pos: 2250, y_pos: 290, size: 50 },
   { x_pos: 1420, y_pos: 115, size: 50 },
   { x_pos: 1653, y_pos: 198, size: 50 },
+  { x_pos: 2000, y_pos: 240, size: 50 },
+  // { x_pos: 2800, y_pos: 198, size: 50 },
+  { x_pos: 3300, y_pos: 198, size: 50 },
+  { x_pos: 2600, y_pos: 210, size: 50 },
+  { x_pos: 2820, y_pos: 130, size: 50 },
+  { x_pos: 2983, y_pos: 115, size: 50 },
+];
+
+const platformsCoords = [
+  { x_pos: 150, y_pos: SIZES.floorPosY - 100, length: 75, isMoving: false },
+  { x_pos: 1000, y_pos: SIZES.floorPosY - 105, length: 110, isMoving: false },
+  { x_pos: 1200, y_pos: SIZES.floorPosY - 150, length: 100, isMoving: true },
+  { x_pos: 1100, y_pos: SIZES.floorPosY - 200, length: 80, isMoving: false },
+  { x_pos: 1400, y_pos: SIZES.floorPosY - 250, length: 100, isMoving: false },
+  { x_pos: 2500, y_pos: SIZES.floorPosY - 130, length: 110, isMoving: true },
+  { x_pos: 2690, y_pos: SIZES.floorPosY - 200, length: 120, isMoving: true },
+  { x_pos: 2900, y_pos: SIZES.floorPosY - 250, length: 120, isMoving: true },
 ];
 
 const enemiesCoords = [
   { x_pos: 340, y_pos: 400 },
   { x_pos: 800, y_pos: 400 },
   { x_pos: 1405, y_pos: 400 },
+  { x_pos: 1900, y_pos: 400 },
+  { x_pos: 2750, y_pos: 400 },
 ];
 
 const NUMBERS = {
@@ -66,3 +90,14 @@ const NUMBERS = {
   minLives: 1,
   maxScore: collectablesCoords.length,
 };
+
+const canyons = [
+  {
+    x_pos: 120,
+    width: 120,
+    depth: 120,
+    isCharacterInside: false,
+  },
+  { x_pos: 1000, width: 120, depth: 120, isCharacterInside: false },
+  { x_pos: 3130, width: 120, depth: 120, isCharacterInside: false },
+];
