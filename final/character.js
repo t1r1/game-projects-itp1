@@ -141,8 +141,9 @@ function createCharacter(x, y) {
         }
       }
 
-      if (this.y > SIZES.canvasHeight) {
-        // lives -= 1;
+      // we assume that player dies when it contacts with an enemy or falls into a canyon
+      if (this.y > SIZES.canvasHeight || hasContactWithEnemy) {
+        lives -= 1;
         if (lives > 0) {
           startGame();
         }

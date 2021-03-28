@@ -1,3 +1,30 @@
+// your extension
+// the bits you found difficult
+// the skills you learnt/practised by implementing it
+//
+// 1. Enemies (extension)
+
+// When I started to implement enemies, I realized that I would like to reach out more complicated visual implementation than that was introduced in lectures.
+// I wanted enemies to move in right & left and up & down directions at the same time.
+// However, I needed to constrain the distance with minX and maxX to prevent an enemy from moving too far away unexpectedly.
+// Also I wanted to randomize their movements to make a full game picture more realistic.
+// For that purpose I used
+//      "const movingDistance = random(40, 50);"
+// It helped me to randomize and constrain the distance within a small window. Just to avoid unwanted
+// wandering around, which would increase the game difficulty for a player.
+//
+//  Finally,
+//  I wanted enemies to move up and down more smoothly, not like they just jump and fall back and forth.
+//  I asked my teammates and they suggested me to try using sin function. https://p5js.org/reference/#/p5/sin
+//  Every time it returns a value from - 1 to 1.
+//  When we multiple enemy’s moving speed by this value, it looks more smoothly on every frame because of the «wave»-nature of sinus.
+//
+//  For me it was the most difficult part. To understand how to make enemies moving smoother in a more realistic way. How to style each frame's movement, so every creature won’t be looking exactly the same, as it was initially created by the «creatures factory».
+//  I hope that I've managed to achieve these goals. And enemies movements looks nice and funny and realistic.
+//
+
+// 2. Platforms and stars (extension)
+
 let treePos_y = 0;
 let floorPos_x = 0;
 let floorPos_y = 0;
@@ -49,7 +76,7 @@ function preload() {
 }
 
 function playMusic() {
-  gameSound.loop();
+  // gameSound.loop();
 }
 
 function stopMusic() {
@@ -285,26 +312,94 @@ function gameOver() {
   textStyle(BOLD);
   textSize(60);
   stroke(0, 0, 0);
-  text("GAME OVER", SIZES.canvasWidth / 3, SIZES.canvasHeight / 2 - 30);
+  text("GAME OVER", SIZES.canvasWidth / 2, SIZES.canvasHeight / 2 - 30);
   textSize(20);
-  text("press space to continue", SIZES.canvasWidth / 2, 300);
+  text('press "space" to continue', SIZES.canvasWidth / 2, 300);
 
   stopMusic();
 }
 
 function startScreen() {
   background(COLORS.sky);
+  for (let i = 0; i < stars.length; i++) {
+    stars[i].draw();
+  }
+  renderMoon();
+
+  noStroke();
+  fill(COLORS.ground);
+  rect(0, 320, width, height);
+  fill(0);
+  textSize(13);
+  text("Music & sound — Pavel Vorobyov (Slighly Magic // BfG) ", 650, 510);
+  text("Game design & development — Maria Vorobyeva", 650, 530);
+
   image(cat, 400, 250);
+
+  strokeWeight(4);
+  //head
+  stroke(0);
+
+  const characterX = 510;
+  const characterY = 325;
+
+  fill(200, 150, 150);
+  ellipse(characterX, characterY - 50, SIZES.characterBody);
+  ellipse(characterX, characterY - 65, 3);
+  ellipse(characterX + 3, characterY - 65, 3);
+  ellipse(characterX - 3, characterY - 65, 3);
+
+  // face
+  fill(0);
+  rect(characterX - 5, characterY - 50, 10, 1);
+
+  // body
+  fill(COLORS.character.body);
+  stroke(0);
+  rect(characterX - 13, characterY - SIZES.characterBody, 26, 30);
+
+  //feet
+  fill(0);
+  rect(characterX - 15, characterY - 5, 10, 10); // left foot
+  rect(characterX + 5, characterY - 5, 10, 10); // right foot
+
+  // hands
+  fill(200, 150, 150);
+  rect(characterX - 23, characterY - 33, 10, 10);
+  rect(characterX + 13, characterY - 33, 10, 10);
+
+  // end of character
+  const enemyY = 305;
+  const enemyX = 575;
+
+  noStroke();
+  fill([247, 239, 231]);
+  ellipse(enemyX, enemyY, 50, 50);
+  rect(enemyX - 25, enemyY + 3, 50, 20);
+
+  stroke(0, 0, 0);
+  strokeWeight(7);
+  let eyeXcoordLeft = enemyX - 10;
+  let eyeXcoordRight = enemyX + 10;
+
+  point(eyeXcoordLeft, enemyY - 4);
+  point(eyeXcoordRight, enemyY - 4);
+  noStroke();
 
   noStroke();
   fill(255, 255, 255);
   textStyle(BOLD);
   textSize(30);
 
-  text("press ENTER to start ", SIZES.canvasWidth / 3, 200);
-  textSize(13);
-  text("Music & sound by Pavel Vorobyov (Slighly Magic)", 650, 550);
-  text("Game design & development by Maria Vorobyeva", 650, 530);
+  noStroke();
+  fill(255, 255, 255);
+
+  textStyle(BOLD);
+  textSize(60);
+  stroke(0, 0, 0);
+  textSize(20);
+  text('press "enter" to start', 410, 200);
+  // text('use "space" to jump', SIZES.canvasWidth / 3, 200);
 }
 
 function renderMoon() {
@@ -388,7 +483,7 @@ function draw() {
     lives = NUMBERS.maxLives; // reset lives
 
     if (!gameOverSound.isPlaying()) {
-      gameOverSound.loop();
+      // gameOverSound.loop();
     }
 
     return;
