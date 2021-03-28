@@ -76,7 +76,7 @@ function preload() {
 }
 
 function playMusic() {
-  // gameSound.loop();
+  gameSound.loop();
 }
 
 function stopMusic() {
@@ -205,6 +205,7 @@ function drawCatBubble() {
   // draw a text inside the bubble
   fill(COLORS.black);
   textFont("Helvetica", 12);
+  textAlign(CENTER);
   text("You Shall Not Pass", LOCATIONS.catPosX - 30, LOCATIONS.catPosY - 5);
 }
 
@@ -234,7 +235,7 @@ function keyPressed() {
       }
       break;
     case "complete":
-      if (keyCode === keyCodes.KEY_CODE_ENTER) {
+      if (keyCode === keyCodes.KEY_CODE_SPACE) {
         playMusic();
         startGame();
       }
@@ -312,6 +313,7 @@ function gameOver() {
   textStyle(BOLD);
   textSize(60);
   stroke(0, 0, 0);
+  textAlign(CENTER);
   text("GAME OVER", SIZES.canvasWidth / 2, SIZES.canvasHeight / 2 - 30);
   textSize(20);
   text('press "space" to continue', SIZES.canvasWidth / 2, 300);
@@ -319,7 +321,7 @@ function gameOver() {
   stopMusic();
 }
 
-function startScreen() {
+function drawStartScreen() {
   background(COLORS.sky);
   for (let i = 0; i < stars.length; i++) {
     stars[i].draw();
@@ -337,54 +339,15 @@ function startScreen() {
   image(cat, 400, 250);
 
   strokeWeight(4);
-  //head
   stroke(0);
 
-  const characterX = 510;
-  const characterY = 325;
-
-  fill(200, 150, 150);
-  ellipse(characterX, characterY - 50, SIZES.characterBody);
-  ellipse(characterX, characterY - 65, 3);
-  ellipse(characterX + 3, characterY - 65, 3);
-  ellipse(characterX - 3, characterY - 65, 3);
-
-  // face
-  fill(0);
-  rect(characterX - 5, characterY - 50, 10, 1);
-
-  // body
-  fill(COLORS.character.body);
-  stroke(0);
-  rect(characterX - 13, characterY - SIZES.characterBody, 26, 30);
-
-  //feet
-  fill(0);
-  rect(characterX - 15, characterY - 5, 10, 10); // left foot
-  rect(characterX + 5, characterY - 5, 10, 10); // right foot
-
-  // hands
-  fill(200, 150, 150);
-  rect(characterX - 23, characterY - 33, 10, 10);
-  rect(characterX + 13, characterY - 33, 10, 10);
-
-  // end of character
-  const enemyY = 305;
-  const enemyX = 575;
+  character = createCharacter(510, 325);
+  character.draw();
 
   noStroke();
-  fill([247, 239, 231]);
-  ellipse(enemyX, enemyY, 50, 50);
-  rect(enemyX - 25, enemyY + 3, 50, 20);
 
-  stroke(0, 0, 0);
-  strokeWeight(7);
-  let eyeXcoordLeft = enemyX - 10;
-  let eyeXcoordRight = enemyX + 10;
-
-  point(eyeXcoordLeft, enemyY - 4);
-  point(eyeXcoordRight, enemyY - 4);
-  noStroke();
+  const enemy = createEnemy(575, 305, true);
+  enemy.draw();
 
   noStroke();
   fill(255, 255, 255);
@@ -399,7 +362,6 @@ function startScreen() {
   stroke(0, 0, 0);
   textSize(20);
   text('press "enter" to start', 410, 200);
-  // text('use "space" to jump', SIZES.canvasWidth / 3, 200);
 }
 
 function renderMoon() {
@@ -452,29 +414,56 @@ function renderGround() {
   pop();
 }
 
+function drawCompleteScreen() {
+  background(COLORS.sky);
+  for (let i = 0; i < stars.length; i++) {
+    stars[i].draw();
+  }
+  renderMoon();
+
+  noStroke();
+  fill(COLORS.ground);
+  rect(0, 320, width, height);
+  fill(0);
+  textSize(13);
+  text('press "Space" to start again', 700, 510);
+
+  image(cat, 400, 250);
+
+  strokeWeight(4);
+  stroke(0);
+
+  character = createCharacter(510, 325);
+  character.draw();
+
+  noStroke();
+
+  const enemy = createEnemy(575, 305, true);
+  enemy.draw();
+
+  noStroke();
+  fill(255, 255, 255);
+  textStyle(BOLD);
+  textSize(30);
+
+  noStroke();
+  fill(255, 255, 255);
+
+  textStyle(BOLD);
+  textSize(60);
+  stroke(0, 0, 0);
+  textSize(20);
+  text(`Level complete! Your score is ${gameScore}`, 410, 200);
+}
+
 function draw() {
   if (gameState === "startscreen") {
-    startScreen();
+    drawStartScreen();
     return;
   }
 
   if (gameState === "complete") {
-    noStroke();
-
-    noFill();
-    background(COLORS.sky);
-    image(completeLevelImg, 180, SIZES.canvasHeight / 3);
-
-    noStroke();
-    fill(COLORS.flagPoleFlag);
-    textStyle(BOLD);
-    textSize(20);
-
-    text("press enter to start again", SIZES.canvasWidth / 3, 500);
-    text(`your score is ${gameScore}`, SIZES.canvasWidth / 3, 400);
-
-    lives = NUMBERS.maxLives; // reset lives
-
+    drawCompleteScreen();
     return;
   }
 
@@ -483,14 +472,13 @@ function draw() {
     lives = NUMBERS.maxLives; // reset lives
 
     if (!gameOverSound.isPlaying()) {
-      // gameOverSound.loop();
+      gameOverSound.loop();
     }
 
     return;
   }
 
   if (gameState === "play") {
-    console.log(character.x, character.world_x);
     if (lives < 1) {
       gameState = "over";
       gameScore = 0;
@@ -580,17 +568,5 @@ function draw() {
     text("score " + gameScore, 30, 20);
 
     character.draw();
-
-    // DEBUG
-    fill("Salmon");
-    textSize(16);
-    textAlign(CENTER);
-    text(
-      "(" + floor(mouseX - character.scrollPos) + ", " + floor(mouseY) + ")",
-      mouseX,
-      mouseY
-    );
-
-    //DEBUG
   }
 }

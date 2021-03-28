@@ -136,9 +136,7 @@ function createCharacter(x, y) {
       }
 
       if (hasContactWithEnemy) {
-        if (!fallSound.isPlaying()) {
-          fallSound.play();
-        }
+        fallSound.play();
       }
 
       // we assume that player dies when it contacts with an enemy or falls into a canyon

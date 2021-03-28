@@ -18,6 +18,7 @@ function createCollectable(x_pos, y_pos, size) {
       fill(COLORS.collectable.inner);
       ellipse(this.x, this.y, this.size - 10, this.size);
 
+      textAlign(CENTER);
       textSize(30);
       textFont("Georgia");
 
