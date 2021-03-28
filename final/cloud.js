@@ -10,7 +10,7 @@ function createCloud() {
     draw() {
       noStroke();
       fill(COLORS.cloud);
-      // the shadow
+      // draw a shadow
       ellipse(
         this.x,
         this.y - 3 * size,
@@ -25,7 +25,7 @@ function createCloud() {
       );
       ellipse(this.x + 50 * size, this.y, this.width, this.height);
 
-      // a cloud
+      // draw a cloud
       fill(255);
       ellipse(this.x, this.y, this.width + 50 * size, this.height + 26 * size);
       ellipse(

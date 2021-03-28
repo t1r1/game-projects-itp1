@@ -1,10 +1,3 @@
-// { x_pos: 200, isFound: false, y_pos: 230, size: 50 },
-// { x_pos: 700, isFound: false, y_pos: 240, size: 50 },
-// { x_pos: 1250, isFound: false, y_pos: 210, size: 50 },
-// { x_pos: 1050, isFound: false, y_pos: 290, size: 50 },
-// { x_pos: 2250, isFound: false, y_pos: 290, size: 50 },
-// { x_pos: 1420, isFound: false, y_pos: 115, size: 50 },
-
 function createCollectable(x_pos, y_pos, size) {
   return {
     x: x_pos,

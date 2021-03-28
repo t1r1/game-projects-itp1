@@ -1,7 +1,7 @@
 let treePos_y = 0;
 let floorPos_x = 0;
 let floorPos_y = 0;
-let mountains = {};
+let mountains = [];
 let gameScore = 0;
 let platforms = [];
 let clouds = [];
@@ -10,23 +10,11 @@ let enemies = [];
 let tooFarLeft = false; // TODO
 let character = null;
 let lives = null;
-
-// initial game state. other possible variants: 'over', 'play', 'complete'
-let gameState = "startscreen";
-
 let flagpole = {};
 
-const mountains_x = [300, 1500];
-const mountains_x_snow = [500, 1700];
-
-const ladder = {
-  firstLevel: {
-    xPos: 2150,
-    yPos: 0,
-    xSize: 200,
-    ySize: 100,
-  },
-};
+// initial game state. other possible variants: 'over', 'play', 'complete'
+// the state is used in draw function to switch between different views, when character dies, plays, etc
+let gameState = "startscreen";
 
 const stars = [];
 
@@ -61,7 +49,7 @@ function preload() {
 }
 
 function playMusic() {
-  // gameSound.loop();
+  gameSound.loop();
 }
 
 function stopMusic() {
@@ -100,7 +88,6 @@ function setupStars() {
 function setup() {
   createCanvas(SIZES.canvasWidth, SIZES.canvasHeight);
   floorPos_y = LOCATIONS.floorPosY;
-  ladder.firstLevel.yPos = 333;
   lives = NUMBERS.maxLives;
   gameScore = 0;
   setupClouds();
@@ -130,21 +117,11 @@ function renderTree(xPos) {
   );
 }
 
-function drawLadder() {
-  fill([70, 74, 77]);
-  rect(
-    ladder.firstLevel.xPos,
-    ladder.firstLevel.yPos,
-    ladder.firstLevel.xSize,
-    ladder.firstLevel.ySize
-  );
-}
-
 function drawCanyon(t_canyon) {
   fill(COLORS.sky);
-  rect(t_canyon.x_pos, floorPos_y, t_canyon.width, t_canyon.width + 30);
+  rect(t_canyon.x_pos, floorPos_y, t_canyon.width, t_canyon.depth);
   fill(COLORS.blueWater);
-  rect(t_canyon.x_pos, 530, 120, 130);
+  rect(t_canyon.x_pos, 530, t_canyon.width, t_canyon.depth);
 }
 
 function drawTrees() {
@@ -153,28 +130,28 @@ function drawTrees() {
   }
 }
 
-function renderMountain(xPos, snowXPos) {
+function renderMountain(t_mountain) {
   beginShape();
   fill(108, 132, 144);
-  vertex(xPos, 432);
-  vertex(xPos + 200, mountains.mountain_y_pos + 50);
-  vertex(xPos + 400, mountains.mountain_y_pos + 232);
+  vertex(t_mountain.x_pos, 432);
+  vertex(t_mountain.x_pos + 200, t_mountain.y_pos + 50);
+  vertex(t_mountain.x_pos + 400, t_mountain.y_pos + 232);
   endShape();
 
   beginShape();
   fill(90, 69, 60);
-  vertex(xPos, mountains.mountain_y_pos + 232);
-  vertex(xPos + 100, mountains.mountain_y_pos + 100);
-  vertex(xPos + 200, mountains.mountain_y_pos + 232);
+  vertex(t_mountain.x_pos, t_mountain.y_pos + 232);
+  vertex(t_mountain.x_pos + 100, t_mountain.y_pos + 100);
+  vertex(t_mountain.x_pos + 200, t_mountain.y_pos + 232);
   endShape();
 
   beginShape();
   fill(202, 218, 225);
 
-  vertex(snowXPos, mountains.snow_y_pos); // snow on the mountain, top point
-  vertex(snowXPos - 29, mountains.snow_y_pos + 35); // snow on the mountain, to the left and bottom
-  vertex(snowXPos + 50, mountains.snow_y_pos + 60); // snow on the mountain, from the left to the right
-  vertex(snowXPos + 47, mountains.snow_y_pos + 43); //snow on the mountain, from the left to the right
+  vertex(t_mountain.snow_x_pos, t_mountain.snow_y_pos); // snow on the mountain, top point
+  vertex(t_mountain.snow_x_pos - 29, t_mountain.snow_y_pos + 35); // snow on the mountain, to the left and bottom
+  vertex(t_mountain.snow_x_pos + 50, t_mountain.snow_y_pos + 60); // snow on the mountain, from the left to the right
+  vertex(t_mountain.snow_x_pos + 47, t_mountain.snow_y_pos + 43); //snow on the mountain, from the left to the right
 
   endShape();
 
@@ -182,8 +159,8 @@ function renderMountain(xPos, snowXPos) {
 }
 
 function drawMountains() {
-  for (let m = 0; m < mountains_x.length; m++) {
-    renderMountain(mountains_x[m], mountains_x_snow[m]);
+  for (let m = 0; m < mountainsCoords.length; m++) {
+    renderMountain(mountainsCoords[m]);
   }
 }
 
@@ -253,14 +230,14 @@ function renderFlagPole() {
   push();
   strokeWeight(5);
   stroke(180);
-  line(flagpole.x_pos, floorPos_y, flagpole.x_pos, floorPos_y - 250);
+  line(flagpole.x_pos, floorPos_y, flagpole.x_pos, floorPos_y - 400);
   noStroke();
   fill(COLORS.flagPoleFlag);
 
   if (flagpole.isReached) {
     rect(flagpole.x_pos, floorPos_y - 50, 50, 50);
   } else {
-    rect(flagpole.x_pos, floorPos_y - 250, 50, 50);
+    rect(flagpole.x_pos, floorPos_y - 400, 50, 50);
   }
 
   pop(); // cancel stroke weight at the end
@@ -274,13 +251,6 @@ function startGame() {
   treePos_y = 300;
   floorPos_x = 0;
   character = createCharacter(90, floorPos_y); // initialize a character with start x and y coordinates
-
-  mountains = {
-    snow_x_pos: 500,
-    snow_y_pos: 250,
-    mountain_x_pos: 300,
-    mountain_y_pos: 200,
-  };
 
   flagpole = {
     isReached: false,
@@ -301,11 +271,6 @@ function startGame() {
       )
     );
   }
-  // platforms.push(createPlatform(150, floorPos_y - 100, 75));
-  // platforms.push(createPlatform(1000, floorPos_y - 105, 110));
-  // platforms.push(createPlatform(1200, floorPos_y - 150, 100, true));
-  // platforms.push(createPlatform(1100, floorPos_y - 200, 80));
-  // platforms.push(createPlatform(1400, floorPos_y - 250, 100));
 
   coins = [];
   enemies = [];
@@ -322,7 +287,6 @@ function gameOver() {
   stroke(0, 0, 0);
   text("GAME OVER", SIZES.canvasWidth / 3, SIZES.canvasHeight / 2 - 30);
   textSize(20);
-  // image(gameOverImg, 180, SIZES.canvasHeight / 3);
   text("press space to continue", SIZES.canvasWidth / 2, 300);
 
   stopMusic();
@@ -451,7 +415,8 @@ function draw() {
       stopMusic();
     }
 
-    tooFarLeft = character.world_x <= LOCATIONS.catPosX - 100; // prevents character from going too far left with a cute bubble
+    // prevents character from going too far left with a cute bubble
+    tooFarLeft = character.world_x <= LOCATIONS.catPosX - 100;
 
     character.checkPlatformContact();
     character.checkIsPlummeting();
@@ -464,7 +429,6 @@ function draw() {
     drawMountains();
     drawClouds();
     drawTrees();
-    drawLadder();
 
     if (tooFarLeft) {
       drawCatBubble();

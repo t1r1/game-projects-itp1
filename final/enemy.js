@@ -1,6 +1,6 @@
 function createEnemy(x, y, isMoving) {
   const enemySize = 50;
-  const movingDistance = random(40, 60);
+  const movingDistance = random(40, 50);
   return {
     x,
     y,
@@ -12,9 +12,6 @@ function createEnemy(x, y, isMoving) {
     minX: x,
     count: 0,
     eyeColor: COLORS.black,
-    reach: function () {
-      // when an enemy is reached by the character, it changes it's eyes color
-    },
     draw: function () {
       this.count += 0.1;
       const enemyY = this.y + 5 * sin(this.count);
@@ -27,6 +24,7 @@ function createEnemy(x, y, isMoving) {
       let eyeXcoordLeft = this.x - 10;
       let eyeXcoordRight = this.x + 10;
 
+      // make an enemy change it's sight direction towards the moving side
       if (this.state === "right") {
         eyeXcoordLeft = this.x - 8;
         eyeXcoordRight = this.x + 12;

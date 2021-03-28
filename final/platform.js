@@ -9,8 +9,11 @@ function createPlatform(x, y, length, isMoving) {
     maxX: x + length,
     minX: x,
     draw: function () {
+      // draw the basics
       fill(COLORS.platform);
       rect(this.x, this.y, this.length, SIZES.platform);
+
+      // draw some pattern to make a object look less "flat"
       fill([140, 131, 148]);
       rect(this.x, this.y + SIZES.platform, this.length, 5);
       fill([153, 153, 122]);
@@ -27,8 +30,8 @@ function createPlatform(x, y, length, isMoving) {
       }
       return false;
     },
-
     move: function () {
+      // moves a platform according to it's state's direction
       if (!this.isMoving) {
         return;
       }

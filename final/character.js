@@ -35,7 +35,8 @@ function createCharacter(x, y) {
       }
 
       if (this.direction === "left") {
-        const tooFarLeft = character.world_x <= SIZES.catPosX - 200; //
+        // prevents character from going too far left with a cute bubble
+        const tooFarLeft = character.world_x <= LOCATIONS.catPosX - 200; //
         if (!tooFarLeft) {
           if (this.x > width * 0.2) {
             this.x -= 5;
@@ -46,7 +47,7 @@ function createCharacter(x, y) {
       }
 
       if (this.isPlummeting) {
-        this.y += 5;
+        this.y += 4;
       }
     },
     draw: function () {
@@ -141,7 +142,7 @@ function createCharacter(x, y) {
       }
 
       if (this.y > SIZES.canvasHeight) {
-        lives -= 1;
+        // lives -= 1;
         if (lives > 0) {
           startGame();
         }

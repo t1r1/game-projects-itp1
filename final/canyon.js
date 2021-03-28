@@ -1,1 +1,0 @@
-function createCanyon(x, width) {}
