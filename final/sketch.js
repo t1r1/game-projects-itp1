@@ -25,6 +25,23 @@
 
 // 2. Platforms and stars (extension)
 
+//
+// I decided to implement shining starts, as it helps to turn the game picture from static to dynamic.
+//   My goal was to create a star-fabric, but to make each star unique and non-repeatable.
+//   I divided this goals into a few steps:
+//  - Speed
+//  - Size
+//  - State (star's mode: grow or shrink)
+//  - Colors
+//
+//  I used random colors, however constrained it ("floor(random(128, 255)") to avoid the appearance of black stars.
+//  It would be mysterious, but would not look any real.
+//  The 2nd thing I wanted to make random was the size of a star and it’s location on canvas.
+//  Implementing changing stars’ state and shimmering effect were the most challenging part as it required to use, adjust and manage vectors and its properties.
+//
+//   As regarding to platforms.
+//   It was quite challenging and playful to make it move to right and left directions and to properly check the player's contact with a platform.
+
 let treePos_y = 0;
 let floorPos_x = 0;
 let floorPos_y = 0;
